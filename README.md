@@ -35,14 +35,25 @@ $ npm run test:cov
 ## Todo
 
 [] Implementar padrão de testes
+
 [] Definir classes bases para repository, paginação
+
 [] Definir DTO genericos
+
 [] Implementar métodos genericos
+
 [] Implementar crud generico
+
 [] Implementar middwlare para validar tenantId
+
 [] Docker-compose, makefile,
+
 [] Testes em memoria
+
 [] Heltcheck
+
 [] configurar migrations
+
 [] Implementar logger
+
 [] Lint para nomes de arquivos
