@@ -1,15 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { ValidationPipe } from './common/pipes/validator.pipe';
+import { ValidationPipe } from './common/utils/pipes/validator.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
-    .setTitle('Boilerplate Service')
-    .setDescription('Boilerplate Service')
+    .setTitle('Template Service')
+    .setDescription('Template Service')
     .setVersion('1.0')
     .addTag('book')
     .build();

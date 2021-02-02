@@ -1,7 +1,7 @@
-import { BaseRepository } from 'src/common/base.repository';
+import { BaseRepository } from 'src/common/base/base.repository';
 import { BookModel } from 'src/models/book.model';
 import { EntityRepository } from 'typeorm';
-import { CreateBookRequestDTO } from './book.request.dto';
+import { CreateBookRequestDTO } from '../dtos/request/create.book.request.dto';
 
 @EntityRepository(BookModel)
 export class BookRepository extends BaseRepository<BookModel> {

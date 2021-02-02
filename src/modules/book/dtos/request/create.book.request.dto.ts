@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotBlank } from 'src/common/validators/isnotblank.validator';
+import { IsNotBlank } from 'src/common/utils/validators/isnotblank.validator';
 import { IsOptional } from 'class-validator';
 export class CreateBookRequestDTO {
   @ApiProperty({
