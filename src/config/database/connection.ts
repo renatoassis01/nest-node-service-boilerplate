@@ -1,6 +1,10 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import path from 'path';
+import { BookModel } from 'src/models/book.model';
 import { Environment } from '../enviroment';
+
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const migrations = {
   migrations: ['database/migrations/*.ts'],
@@ -30,7 +34,7 @@ export function getDatabaseConfigConnection(): TypeOrmModuleOptions {
     password: Environment.getDatabaseConfig().password,
     database: Environment.getDatabaseConfig().database,
     logging: Environment.isEnvironmentDev(),
-    entities: [`${path.resolve(__dirname, '../models')}/*.{ts,js}`],
+    entities: [BookModel],
     ...migrations,
   };
 }

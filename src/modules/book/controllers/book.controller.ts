@@ -3,15 +3,17 @@ import {
   Controller,
   Delete,
   Get,
-  Head,
   Param,
   ParseIntPipe,
+  ParseUUIDPipe,
   Post,
+  Put,
 } from '@nestjs/common';
 import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateBookRequestDTO } from '../dtos/request/create.book.request.dto';
+import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
 import { BookService } from '../services/book.service';
-import { BookResponseDTO } from '../dtos/response/book.response.dto';
+import { BookResponseDTO } from '../dtos/response/book.dto';
+import { TenantId } from 'src/common/utils/decorators/tenantId.decorator';
 
 @ApiTags('books')
 @ApiHeader({
@@ -19,7 +21,7 @@ import { BookResponseDTO } from '../dtos/response/book.response.dto';
   description: 'TenantId',
   required: true,
 })
-@Controller('book')
+@Controller('books')
 export class BookController {
   constructor(private bookService: BookService) {}
 
@@ -30,9 +32,10 @@ export class BookController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   async create(
-    @Body() createBookDto: CreateBookRequestDTO,
+    @TenantId() tenantId: string,
+    @Body() createBookDTO: CreateBookRequestDTO,
   ): Promise<BookResponseDTO> {
-    const book = await this.bookService.create(createBookDto);
+    const book = await this.bookService.create(tenantId, createBookDTO);
     return new BookResponseDTO(book);
   }
 
@@ -42,8 +45,11 @@ export class BookController {
     description: 'The record has been successfully return',
   })
   @ApiResponse({ status: 404, description: 'Not found' })
-  async find(@Param('id', ParseIntPipe) id: number): Promise<any> {
-    return await this.bookService.find(id);
+  async find(
+    @TenantId() tenantId: string,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<any> {
+    return await this.bookService.find(tenantId, id);
   }
 
   @Delete(':id')
@@ -52,7 +58,23 @@ export class BookController {
     description: 'The record has been successfully return',
   })
   @ApiResponse({ status: 404, description: 'Forbidden.' })
-  async delete(@Param('id', ParseIntPipe) id: number): Promise<any> {
-    return await this.bookService.find(id);
+  async delete(
+    @TenantId() tenantId: string,
+    @Param('id', ParseIntPipe) id: string,
+  ): Promise<any> {
+    return await this.bookService.find(tenantId, id);
+  }
+
+  @Put(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'The record has been successfully return',
+  })
+  @ApiResponse({ status: 404, description: 'Forbidden.' })
+  async update(
+    @TenantId() tenantId: string,
+    @Param('id', ParseIntPipe) id: string,
+  ): Promise<any> {
+    return await this.bookService.find(tenantId, id);
   }
 }

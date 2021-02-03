@@ -1,11 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  SwaggerCustomOptions,
+  SwaggerModule,
+} from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe } from './common/utils/pipes/validator.pipe';
-import * as dotenv from 'dotenv';
 import { Environment } from './config/enviroment';
-dotenv.config();
 
 const API_DOCS_PATH = 'api/docs';
 const PORT = Environment.getServicePort();
@@ -30,6 +32,15 @@ async function setupNestApplication(): Promise<INestApplication> {
 }
 
 function setupSwaggerModule(app: INestApplication): void {
+  const swaggerCustom: SwaggerCustomOptions = {
+    customSiteTitle: '4Tax - API',
+    customfavIcon:
+      'https://solucoesdefinitivas.com.br/site/wp-content/uploads/2017/02/icone-iphone.png',
+    customCss: `
+      .topbar-wrapper img {content:url('https://www.seidorbrasil.com.br/4tax/assets/img/logo-default-white.png'); width:300px; height:auto;}
+      .swagger-ui .topbar { background-color: #115585; }`,
+  };
+
   const config = new DocumentBuilder()
     .setTitle('Template Service')
     .setDescription('Template Service')
@@ -37,7 +48,7 @@ function setupSwaggerModule(app: INestApplication): void {
     .addTag('book')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(API_DOCS_PATH, app, document);
+  SwaggerModule.setup(API_DOCS_PATH, app, document, swaggerCustom);
 }
 
 async function bootstrap(): Promise<void> {

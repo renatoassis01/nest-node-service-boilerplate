@@ -4,13 +4,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { isUUID } from '../utils/string.utils';
+import * as uuid from 'uuid-validate';
 
 @Injectable()
 export class TenantIDMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     const tenantid = req.header('tenantid');
-    if (!tenantid || !isUUID(tenantid))
+    if (!tenantid || !uuid(tenantid))
       throw new UnauthorizedException('tenantid invalid');
 
     next();

@@ -42,11 +42,9 @@ $ npm run test:cov
 
 [] Implementar métodos genericos
 
-[] Implementar crud generico
+[x] Implementar middwlare para validar tenantId
 
-[] Implementar middwlare para validar tenantId
-
-[] Docker-compose, makefile,
+[x] Docker-compose, makefile,
 
 [] Testes em memoria
 
