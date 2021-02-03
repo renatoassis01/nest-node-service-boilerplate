@@ -3,15 +3,23 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe } from './common/utils/pipes/validator.pipe';
+import * as dotenv from 'dotenv';
+import { Environment } from './config/enviroment';
+dotenv.config();
+
+const API_DOCS_PATH = 'api/docs';
+const PORT = Environment.getServicePort();
 
 function banner(): void {
   const display = `
   █░█ ▀█▀ ▄▀█ ▀▄▀   ▀█▀ █▀▀ ▄▀█ █▀▄▀█
   ▀▀█ ░█░ █▀█ █░█   ░█░ ██▄ █▀█ █░▀░█
 
-  CURRENT ENVIRONMENT: ${process.env.CURRENT_ENVIRONMENT || 'DEV'}
-  PORT: ${process.env.PORT || 3000}`;
+  CURRENT ENVIRONMENT: ${Environment.getCurrentEnvironment()}
+  PORT: ${PORT}`;
   console.log(display);
+  if (Environment.getCurrentEnvironment() === 'DEV')
+    console.log(`API DOCS: https://localhot:${PORT}/${API_DOCS_PATH}`);
 }
 
 async function setupNestApplication(): Promise<INestApplication> {
@@ -29,13 +37,13 @@ function setupSwaggerModule(app: INestApplication): void {
     .addTag('book')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup(API_DOCS_PATH, app, document);
 }
 
 async function bootstrap(): Promise<void> {
   const app = await setupNestApplication();
   setupSwaggerModule(app);
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(PORT);
   banner();
 }
 bootstrap();
