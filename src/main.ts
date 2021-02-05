@@ -9,7 +9,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from './common/utils/pipes/validator.pipe';
 import { Environment } from './config/enviroment';
 
-const API_DOCS_PATH = 'api/docs';
+const API_DOCS_PATH = 'api';
 const PORT = Environment.getServicePort();
 
 function banner(): void {
@@ -20,8 +20,10 @@ function banner(): void {
   CURRENT ENVIRONMENT: ${Environment.getCurrentEnvironment()}
   PORT: ${PORT}`;
   console.log(display);
-  if (Environment.getCurrentEnvironment() === 'DEV')
-    console.log(`API DOCS: https://localhot:${PORT}/${API_DOCS_PATH}`);
+  if (Environment.getCurrentEnvironment() === 'DEV') {
+    console.log(`API DOCS BROWSER: https://localhot:${PORT}/${API_DOCS_PATH}`);
+    console.log(`API DOCS JSON: https://localhot:${PORT}/api-json`);
+  }
 }
 
 async function setupNestApplication(): Promise<INestApplication> {

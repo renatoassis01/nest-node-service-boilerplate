@@ -1,10 +1,10 @@
-import { BaseModel } from 'src/common/base/models/base.model';
+import { BaseModel } from '../common/base/models/base.model';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('books')
 export class BookModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
-  id?: number;
+  id?: string;
 
   @Column()
   name: string;

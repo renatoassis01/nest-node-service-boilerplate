@@ -11,7 +11,9 @@ export class TenantIDMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     const tenantid = req.header('tenantid');
     if (!tenantid || !uuid(tenantid))
-      throw new UnauthorizedException('tenantid invalid');
+      throw new UnauthorizedException(
+        'Validation failed (tenantid  is expected)',
+      );
 
     next();
   }

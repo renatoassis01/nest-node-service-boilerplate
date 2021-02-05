@@ -1,27 +1,22 @@
+import { IFindManyResult } from '../../../common/interfaces/findmanyresult';
 import { DeepPartial } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BaseModel } from '../models/base.model';
 
 export interface IBaseRepository<T extends BaseModel> {
-  create(tenantId: string, object: DeepPartial<T>): Promise<T>;
+  create(tenantId: string, userId: string, object: DeepPartial<T>): Promise<T>;
+  findById(tenantid: string, id: string, relations?: string[]): Promise<T>;
 
-  //   findAll(): Promise<T[] | undefined>;
+  findAll(
+    tenantId: string,
+    filters: any,
+    relations?: string[],
+  ): Promise<IFindManyResult>;
 
-  //   //   findManyByProperties(
-  //   //     properties: QueryDeepPartialEntity<T>,
-  //   //     relations?: string[],
-  //   //   ): Promise<T[] | undefined>;
-
-  //   //   delete(object: T): Promise<void>;
-
-  //   //   findByCode(id: number, relations?: string[]): Promise<T | undefined>;
-
-  //   //   findOneByProperties(
-  //   //     idOrProperties: number | QueryDeepPartialEntity<T>,
-  //   //     relations?: string[],
-  //   //   ): Promise<T | undefined>;
-
-  //   //   partialUpdate(
-  //   //     id: number,
-  //   //     partialEntity: QueryDeepPartialEntity<T>,
-  //   //   ): Promise<void>;
+  partialUpdate(
+    tenantid: string,
+    userId: string,
+    id: string,
+    partialEntity: QueryDeepPartialEntity<T>,
+  ): Promise<boolean>;
 }

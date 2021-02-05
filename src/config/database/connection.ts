@@ -1,9 +1,9 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import path from 'path';
-import { BookModel } from 'src/models/book.model';
 import { Environment } from '../enviroment';
 
 import * as dotenv from 'dotenv';
+import { BookModel } from '../../models/book.model';
 dotenv.config();
 
 const migrations = {

@@ -4,38 +4,66 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
-import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiHeader,
+  ApiHeaders,
+  ApiInternalServerErrorResponse,
+  ApiResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
 import { BookService } from '../services/book.service';
 import { BookResponseDTO } from '../dtos/response/book.dto';
-import { TenantId } from 'src/common/utils/decorators/tenantId.decorator';
+import { TenantId } from '../../../common/utils/decorators/tenantId.decorator';
+import { FindAllBookRequestDTO } from '../dtos/request/findall.book.dto';
+import { FindAllBookResultResponseDTO } from '../dtos/response/findallresult.book.dto';
+import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
+import { UserId } from '../../../common/utils/decorators/userId.decorator';
 
 @ApiTags('books')
-@ApiHeader({
-  name: 'tenantId',
-  description: 'TenantId',
-  required: true,
+@ApiHeaders([
+  {
+    name: 'tenantid',
+    description: 'TenantId',
+    required: true,
+  },
+  {
+    name: 'userId',
+    description: 'userId',
+    required: true,
+  },
+])
+@ApiUnauthorizedResponse({
+  description: 'Validation failed (tenantid  is expected)',
 })
+@ApiBadRequestResponse({
+  description: 'Bad Request',
+})
+@ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
 @Controller('books')
 export class BookController {
   constructor(private bookService: BookService) {}
 
   @Post()
-  @ApiResponse({
-    status: 201,
-    description: 'The record has been successfully created.',
+  @ApiCreatedResponse({
+    description: 'The record has been successfully created',
+    type: BookResponseDTO,
   })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
   async create(
     @TenantId() tenantId: string,
+    @UserId() userId: string,
     @Body() createBookDTO: CreateBookRequestDTO,
   ): Promise<BookResponseDTO> {
-    const book = await this.bookService.create(tenantId, createBookDTO);
+    const book = await this.bookService.create(tenantId, userId, createBookDTO);
     return new BookResponseDTO(book);
   }
 
@@ -45,11 +73,25 @@ export class BookController {
     description: 'The record has been successfully return',
   })
   @ApiResponse({ status: 404, description: 'Not found' })
-  async find(
+  async findById(
     @TenantId() tenantId: string,
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<any> {
-    return await this.bookService.find(tenantId, id);
+    return await this.bookService.findById(tenantId, id);
+  }
+
+  @Get('get-all')
+  @ApiResponse({
+    status: 200,
+    description: 'The record has been successfully return',
+    type: FindAllBookResultResponseDTO,
+  })
+  async findAll(
+    @TenantId() tenantid: string,
+    @Query() filters: FindAllBookRequestDTO,
+  ): Promise<FindAllBookResultResponseDTO> {
+    const result = await this.bookService.findAll(tenantid, filters);
+    return new FindAllBookResultResponseDTO(result);
   }
 
   @Delete(':id')
@@ -60,9 +102,9 @@ export class BookController {
   @ApiResponse({ status: 404, description: 'Forbidden.' })
   async delete(
     @TenantId() tenantId: string,
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<any> {
-    return await this.bookService.find(tenantId, id);
+    return await this.bookService.findById(tenantId, id);
   }
 
   @Put(':id')
@@ -73,8 +115,10 @@ export class BookController {
   @ApiResponse({ status: 404, description: 'Forbidden.' })
   async update(
     @TenantId() tenantId: string,
-    @Param('id', ParseIntPipe) id: string,
+    @UserId() userId: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() update: UpdateBookRequestDTO,
   ): Promise<any> {
-    return await this.bookService.find(tenantId, id);
+    return await this.bookService.update(tenantId, userId, id, update);
   }
 }
