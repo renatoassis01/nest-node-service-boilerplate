@@ -8,7 +8,7 @@ import { IBaseAuditModel } from '../interfaces/base.audit.model';
 import { IBaseTenantIdModel } from '../interfaces/base.tenantid.model';
 
 export abstract class BaseModel implements IBaseAuditModel, IBaseTenantIdModel {
-  @Column({ type: 'uuid', nullable: true })
+  @Column({ type: 'uuid' })
   userId: string;
 
   @Column({ type: 'uuid' })
