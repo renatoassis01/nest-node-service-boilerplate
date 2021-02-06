@@ -1,3 +1,3 @@
 export interface IBaseTenantIdModel {
-  tenantid: string;
+  tenantId: string;
 }

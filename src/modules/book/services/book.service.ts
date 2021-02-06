@@ -24,25 +24,25 @@ export class BookService {
   }
 
   public async findAll(
-    tenantid: string,
+    tenantId: string,
     filters: FindAllBookRequestDTO,
   ): Promise<IFindManyResult> {
-    return await this.repository.findAll(tenantid, filters);
+    return await this.repository.findAll(tenantId, filters);
   }
 
-  public async findById(tenantid: string, id: string): Promise<BookModel> {
-    const book = await this.repository.findById(tenantid, id);
+  public async findById(tenantId: string, id: string): Promise<BookModel> {
+    const book = await this.repository.findById(tenantId, id);
     if (!book) throw new NotFoundException('Book not found');
     return book;
   }
 
   public async update(
-    tenantid: string,
+    tenantId: string,
     userId: string,
     id: string,
     dto: UpdateBookRequestDTO,
   ): Promise<void> {
-    const book = await this.repository.partialUpdate(tenantid, userId, id, dto);
+    const book = await this.repository.partialUpdate(tenantId, userId, id, dto);
     if (!book) throw new NotFoundException('Book not found');
   }
 }

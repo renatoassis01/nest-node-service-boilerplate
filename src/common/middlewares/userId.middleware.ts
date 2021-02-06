@@ -9,7 +9,7 @@ import * as uuid from 'uuid-validate';
 @Injectable()
 export class UserIDMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    const userId = req.header('userId');
+    const userId = req.header('userid');
     if (!userId || !uuid(userId))
       throw new UnauthorizedException(
         'Validation failed (userId  is expected)',

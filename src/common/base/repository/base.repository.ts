@@ -15,11 +15,11 @@ export class BaseRepository<T extends BaseModel>
   extends AbstractRepository<T>
   implements IBaseRepository<T> {
   public async create(
-    tenantid: string,
+    tenantId: string,
     userId: string,
     object: DeepPartial<T>,
   ): Promise<T> {
-    const model = this.repository.create({ tenantid, userId, ...object });
+    const model = this.repository.create({ tenantId, userId, ...object });
     return this.repository.save<any>(model);
   }
 
@@ -30,12 +30,12 @@ export class BaseRepository<T extends BaseModel>
    * @param relations
    */
   public async findById(
-    tenantid: string,
+    tenantId: string,
     id: string,
     relations?: string[],
   ): Promise<T> {
     const options: FindOneOptions = {
-      where: { id, tenantid },
+      where: { id, tenantId },
       relations,
     };
     return await this.repository.findOne(options);
@@ -48,7 +48,7 @@ export class BaseRepository<T extends BaseModel>
    * @param relations
    */
   public async findAll(
-    tenantid: string,
+    tenantId: string,
     filters: any,
     relations?: string[],
   ): Promise<IFindManyResult> {
@@ -59,7 +59,7 @@ export class BaseRepository<T extends BaseModel>
     });
 
     const options: FindManyOptions = {
-      where: !!rest ? { tenantid, ...rest } : { tenantid },
+      where: !!rest ? { tenantId, ...rest } : { tenantId },
       order: QueryUtils.buildOrderBy({ sortOrder, sortParam }),
       take,
       skip,
@@ -75,7 +75,7 @@ export class BaseRepository<T extends BaseModel>
   }
 
   public async partialUpdate(
-    tenantid: string,
+    tenantId: string,
     userId: string,
     id: string,
     partialEntity: QueryDeepPartialEntity<T>,
@@ -84,7 +84,7 @@ export class BaseRepository<T extends BaseModel>
       .createQueryBuilder()
       .update()
       .set(partialEntity)
-      .where({ id, userId, tenantid })
+      .where({ id, userId, tenantId })
       .execute();
 
     return result.affected > 0;

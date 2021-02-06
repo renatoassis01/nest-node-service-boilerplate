@@ -37,7 +37,7 @@ import { UserId } from '../../../common/utils/decorators/userId.decorator';
     required: true,
   },
   {
-    name: 'userId',
+    name: 'userid',
     description: 'userId',
     required: true,
   },
@@ -87,10 +87,10 @@ export class BookController {
     type: FindAllBookResultResponseDTO,
   })
   async findAll(
-    @TenantId() tenantid: string,
+    @TenantId() tenantId: string,
     @Query() filters: FindAllBookRequestDTO,
   ): Promise<FindAllBookResultResponseDTO> {
-    const result = await this.bookService.findAll(tenantid, filters);
+    const result = await this.bookService.findAll(tenantId, filters);
     return new FindAllBookResultResponseDTO(result);
   }
 

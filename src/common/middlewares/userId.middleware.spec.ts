@@ -46,14 +46,14 @@ describe('Suite tests for UserIDMiddleware', () => {
   it('must be OK for requests with userId', async () => {
     await request(app.getHttpServer())
       .get('/test')
-      .set('userId', '0f14d0ab-9605-4a62-a9e4-5ed26688389b')
+      .set('userid', '0f14d0ab-9605-4a62-a9e4-5ed26688389b')
       .expect(HttpStatus.OK);
   });
 
   it('must be UNAUTHORIZED for requests with userId invalid', async () => {
     await request(app.getHttpServer())
       .get('/test')
-      .set('userId', '0f14b-965-4a2-a94-5e389b')
+      .set('userid', '0f14b-965-4a2-a94-5e389b')
       .expect(HttpStatus.UNAUTHORIZED);
   });
 

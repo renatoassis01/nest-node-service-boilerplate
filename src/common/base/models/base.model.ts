@@ -12,7 +12,7 @@ export abstract class BaseModel implements IBaseAuditModel, IBaseTenantIdModel {
   userId: string;
 
   @Column({ type: 'uuid' })
-  tenantid: string;
+  tenantId: string;
 
   @CreateDateColumn()
   createdAt: Date;
