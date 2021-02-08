@@ -7,14 +7,14 @@ export class FindAllBookResultResponseDTO extends BaseFindManyResponseDTO {
   @ApiProperty({ description: 'Books', type: [BookResponseDTO] })
   readonly data: BookResponseDTO[];
 
-  constructor(model: IFindManyResult) {
+  constructor(data: IFindManyResult) {
     super();
-    this.count = model.count;
-    this.limit = model.limit;
-    this.page = model.page;
+    this.count = data.count;
+    this.limit = data.limit;
+    this.page = data.page;
     this.data =
-      model?.data?.length > 0
-        ? model.data.map((book) => new BookResponseDTO(book))
+      data?.data?.length > 0
+        ? data.data.map((book) => new BookResponseDTO(book))
         : [];
   }
 }

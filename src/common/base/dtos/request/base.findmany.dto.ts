@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   ValidateIf,
   IsOptional,
+  IsUUID,
 } from 'class-validator';
 import { SortOrderEnum } from '../../../enums/sortorder.enum';
 import { IsInteger } from '../../../utils/validators/isinterger.validator';
@@ -48,4 +49,12 @@ export class BaseFindManyRequestDTO
     message: `sortOrder must be ${SortOrderEnum.ASC} or ${SortOrderEnum.DESC}`,
   })
   sortOrder: SortOrderEnum;
+
+  @ApiPropertyOptional({
+    description: 'User',
+    type: String,
+  })
+  @IsUUID()
+  @IsOptional()
+  userId?: string;
 }

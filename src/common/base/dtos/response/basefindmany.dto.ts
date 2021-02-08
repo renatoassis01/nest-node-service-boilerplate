@@ -3,19 +3,22 @@ import { IFindManyResult } from '../../../interfaces/findmanyresult';
 
 export abstract class BaseFindManyResponseDTO implements IFindManyResult {
   @ApiProperty({
-    description: 'total records',
+    description: 'Total records stored',
   })
   count: number;
+
   @ApiProperty({
-    description: 'limite data',
+    description: 'Total items per page',
   })
   limit: number;
+
   @ApiProperty({
-    description: 'page data',
+    description: 'Page current',
   })
   page: number;
+
   @ApiProperty({
-    description: 'total pages data',
+    description: 'Total Pages',
   })
   totalPages: number;
 
