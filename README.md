@@ -36,11 +36,11 @@ $ npm run test:cov
 
 [] Implementar padrão de testes
 
-[] Definir classes bases para repository, paginação
+[x] Definir classes bases para repository, paginação
 
-[] Definir DTO genericos
+[x] Definir DTO genericos
 
-[] Implementar métodos genericos
+[x] Implementar métodos genericos
 
 [x] Implementar middwlare para validar tenantId
 
