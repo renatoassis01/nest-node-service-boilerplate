@@ -1,4 +1,8 @@
-import { INestApplication } from '@nestjs/common';
+import {
+  HttpStatus,
+  INestApplication,
+  NotFoundException,
+} from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { ValidationPipe } from '../../../common/utils/pipes/validator.pipe';
 import { BookService } from '../services/book.service';
@@ -7,11 +11,7 @@ import { BookController } from './book.controller';
 import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
 import { BookRepository } from '../repository/book.repository';
 import { BookResponseDTO } from '../dtos/response/book.dto';
-import * as request from 'supertest';
-
-export type MockType<T> = {
-  [P in keyof T]: jest.Mock<{}>;
-};
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 const book = new BookModelBuilder()
   .withId()
@@ -25,6 +25,11 @@ const book = new BookModelBuilder()
   .withAuthor('Machado de Assis')
   .build();
 
+const createBookDTO = new CreateBookRequestDTO();
+createBookDTO.name = book.name;
+createBookDTO.author = book.author;
+createBookDTO.isbn = book.isbn;
+
 describe('Suite tests Book', () => {
   let app: INestApplication;
   let bookController: BookController;
@@ -37,7 +42,7 @@ describe('Suite tests Book', () => {
       providers: [
         BookService,
         {
-          provide: BookRepository,
+          provide: getRepositoryToken(BookRepository),
           useValue: {},
         },
       ],
@@ -58,10 +63,6 @@ describe('Suite tests Book', () => {
       createBookDTO.author = book.author;
       createBookDTO.isbn = book.isbn;
 
-      bookService.create = jest
-        .fn()
-        .mockReturnValue(new Promise((resolve) => resolve(book)));
-
       bookRepository.create = jest
         .fn()
         .mockResolvedValue(new Promise((resolve) => resolve(book)));
@@ -74,22 +75,14 @@ describe('Suite tests Book', () => {
 
       expect(result).toEqual(new BookResponseDTO(book));
     });
-    // it('should return bad request', async () => {
-    //   const createBookDTO = new CreateBookRequestDTO();
-    //   createBookDTO.name = book.name;
-    //   createBookDTO.author = book.author;
+    it('should return bad request', async () => {
+      bookRepository.findById = jest
+        .fn()
+        .mockResolvedValue(new Promise((resolve) => resolve(undefined)));
 
-    //   jest
-    //     .spyOn(bookService, 'create')
-    //     .mockResolvedValueOnce(new Promise((resolve) => resolve(book)));
-
-    //   const result = await request(app.getHttpServer())
-    //     .post('/books')
-    //     .set('userid', book.userId)
-    //     .set('tenantid', book.tenantId);
-
-    //   console.log(result);
-    //   expect(result.status).toEqual(HttpStatus.BAD_REQUEST);
-    // });
+      expect(
+        await bookController.findById(book.tenantId, book.id),
+      ).rejects.toThrow('Book not found');
+    });
   });
 });

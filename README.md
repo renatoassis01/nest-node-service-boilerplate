@@ -55,3 +55,9 @@ $ npm run test:cov
 [] Implementar logger
 
 [] Lint para nomes de arquivos
+
+https://wanago.io/2020/07/13/api-nestjs-testing-services-controllers-integration-tests/
+
+https://github.com/jmcdo29/testing-nestjs/tree/master/apps
+
+https://circleci.com/blog/getting-started-with-nestjs-and-automatic-testing/

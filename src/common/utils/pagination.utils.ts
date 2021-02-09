@@ -34,15 +34,12 @@ export class PaginationUtils {
     pagination?: IBasePaginationDTO,
   ): IPaginationQuery {
     const take = pagination?.size || DEFAULT_PAGINATION_SIZE;
-    const skip = PaginationUtils.getSkip(
-      take,
-      pagination?.page || DEFAULT_PAGINATION_PAGE,
-    );
-
+    const page = pagination?.page || DEFAULT_PAGINATION_PAGE;
+    const skip = PaginationUtils.getSkip(take, page);
     return { take, skip };
   }
 
   public static getSkip(take: number, page: number): number {
-    return take * (page - 1);
+    return page > DEFAULT_PAGINATION_PAGE ? take * (page - 1) : page;
   }
 }
