@@ -1,8 +1,4 @@
-import {
-  HttpStatus,
-  INestApplication,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { ValidationPipe } from '../../../common/utils/pipes/validator.pipe';
 import { BookService } from '../services/book.service';
@@ -11,7 +7,8 @@ import { BookController } from './book.controller';
 import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
 import { BookRepository } from '../repository/book.repository';
 import { BookResponseDTO } from '../dtos/response/book.dto';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { getCustomRepositoryToken } from '@nestjs/typeorm';
+import * as request from 'supertest';
 
 const book = new BookModelBuilder()
   .withId()
@@ -42,7 +39,7 @@ describe('Suite tests Book', () => {
       providers: [
         BookService,
         {
-          provide: getRepositoryToken(BookRepository),
+          provide: getCustomRepositoryToken(BookRepository),
           useValue: {},
         },
       ],
@@ -75,14 +72,31 @@ describe('Suite tests Book', () => {
 
       expect(result).toEqual(new BookResponseDTO(book));
     });
-    it('should return bad request', async () => {
-      bookRepository.findById = jest
-        .fn()
-        .mockResolvedValue(new Promise((resolve) => resolve(undefined)));
+    it('An example tests supertest', async () => {
+      const createBookDTO = new CreateBookRequestDTO();
+      createBookDTO.name = book.name;
+      createBookDTO.author = book.author;
+      createBookDTO.isbn = book.isbn;
 
-      expect(
-        await bookController.findById(book.tenantId, book.id),
-      ).rejects.toThrow('Book not found');
+      bookRepository.create = jest
+        .fn()
+        .mockResolvedValue(new Promise((resolve) => resolve(book)));
+
+      await request(app.getHttpServer())
+        .post('/books')
+        .send(createBookDTO)
+        .set('userid', book.userId)
+        .set('usertenantid', book.tenantId)
+        .expect(HttpStatus.CREATED);
+    });
+
+    it('should return Book not found', async () => {
+      await expect(async () => {
+        bookRepository.findById = jest
+          .fn()
+          .mockResolvedValue(new Promise((resolve) => resolve(undefined)));
+        await bookController.findById(book.tenantId, book.id);
+      }).rejects.toThrow('Book not found');
     });
   });
 });
