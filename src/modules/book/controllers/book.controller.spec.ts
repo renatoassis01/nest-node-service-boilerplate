@@ -40,7 +40,10 @@ describe('Suite tests Book', () => {
         BookService,
         {
           provide: getCustomRepositoryToken(BookRepository),
-          useValue: {},
+          useValue: {
+            create: jest.fn(),
+            findById: jest.fn(),
+          },
         },
       ],
     }).compile();
@@ -50,7 +53,13 @@ describe('Suite tests Book', () => {
 
     bookService = moduleRef.get<BookService>(BookService);
     bookController = moduleRef.get<BookController>(BookController);
-    bookRepository = await moduleRef.resolve<BookRepository>(BookRepository);
+    bookRepository = await moduleRef.resolve<BookRepository>(
+      getCustomRepositoryToken(BookRepository),
+    );
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   describe('create', () => {
@@ -60,9 +69,11 @@ describe('Suite tests Book', () => {
       createBookDTO.author = book.author;
       createBookDTO.isbn = book.isbn;
 
-      bookRepository.create = jest
-        .fn()
+      jest
+        .spyOn(bookRepository, 'create')
         .mockResolvedValue(new Promise((resolve) => resolve(book)));
+
+      const servicepy = jest.spyOn(bookService, 'create');
 
       const result = await bookController.create(
         book.tenantId,
@@ -71,6 +82,11 @@ describe('Suite tests Book', () => {
       );
 
       expect(result).toEqual(new BookResponseDTO(book));
+      expect(servicepy).toBeCalledWith(
+        book.tenantId,
+        book.userId,
+        createBookDTO,
+      );
     });
     it('An example tests supertest', async () => {
       const createBookDTO = new CreateBookRequestDTO();
