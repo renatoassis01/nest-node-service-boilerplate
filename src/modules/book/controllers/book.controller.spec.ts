@@ -62,7 +62,7 @@ describe('Suite tests Book', () => {
     jest.resetAllMocks();
   });
 
-  describe('create', () => {
+  describe('POST /books', () => {
     it('should return an book', async () => {
       const createBookDTO = new CreateBookRequestDTO();
       createBookDTO.name = book.name;
@@ -88,7 +88,7 @@ describe('Suite tests Book', () => {
         createBookDTO,
       );
     });
-    it('An example tests supertest', async () => {
+    it('An example tests supertest [POST /books]', async () => {
       const createBookDTO = new CreateBookRequestDTO();
       createBookDTO.name = book.name;
       createBookDTO.author = book.author;
@@ -105,7 +105,8 @@ describe('Suite tests Book', () => {
         .set('usertenantid', book.tenantId)
         .expect(HttpStatus.CREATED);
     });
-
+  });
+  describe('GET /books', () => {
     it('should return Book not found', async () => {
       await expect(async () => {
         bookRepository.findById = jest
