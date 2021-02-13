@@ -5,7 +5,7 @@ import {
   FindOneOptions,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { IFindManyResult } from '../../interfaces/findmanyresult';
+import { IGetAllResult } from '../../interfaces/getallresult';
 import { PaginationUtils } from '../../utils/pagination.utils';
 import { QueryUtils } from '../../utils/query.utils';
 import { IBaseRepository } from '../interfaces/base.repository';
@@ -23,19 +23,15 @@ export class BaseRepository<T extends BaseModel>
     return this.repository.save<any>(model);
   }
 
-  /**
-   * busca generica. Não busca registros inatívos
-   * @param tenantid
-   * @param id
-   * @param relations
-   */
-  public async findById(
+  public async getById(
     tenantId: string,
     id: string,
     relations?: string[],
+    withDeleted = false,
   ): Promise<T> {
     const options: FindOneOptions = {
       where: { id, tenantId },
+      withDeleted,
       relations,
     };
     return await this.repository.findOne(options);
@@ -47,19 +43,27 @@ export class BaseRepository<T extends BaseModel>
    * @param filters
    * @param relations
    */
-  public async findAll(
+  public async getAll(
     tenantId: string,
     filters: any,
     relations?: string[],
-  ): Promise<IFindManyResult> {
-    const { page, size, sortOrder, sortParam, ...rest } = filters;
+  ): Promise<IGetAllResult> {
+    const {
+      page,
+      size,
+      sortOrder,
+      sortParam,
+      withDeleted,
+      ...fieldsModel
+    } = filters;
     const { take, skip } = PaginationUtils.getPaginationTakeAndSkip({
       page,
       size,
     });
 
     const options: FindManyOptions = {
-      where: !!rest ? { tenantId, ...rest } : { tenantId },
+      where: !!fieldsModel ? { tenantId, ...fieldsModel } : { tenantId },
+      withDeleted,
       order: QueryUtils.buildOrderBy({ sortOrder, sortParam }),
       take,
       skip,
@@ -74,7 +78,7 @@ export class BaseRepository<T extends BaseModel>
     });
   }
 
-  public async partialUpdate(
+  public async updateById(
     tenantId: string,
     userId: string,
     id: string,
@@ -83,10 +87,37 @@ export class BaseRepository<T extends BaseModel>
     const result = await this.repository
       .createQueryBuilder()
       .update()
-      .set(partialEntity)
-      .where({ id, userId, tenantId })
+      .set({ ...partialEntity, userId })
+      .where({ id, tenantId })
       .execute();
 
+    return result.affected > 0;
+  }
+
+  public async deleteById(tenantId: string, id: string): Promise<boolean> {
+    const result = await this.repository
+      .createQueryBuilder()
+      .delete()
+      .where({ id, tenantId })
+      .execute();
+
+    return result.affected > 0;
+  }
+  public async removeById(
+    tenantId: string,
+    id: string,
+    userId: string,
+  ): Promise<boolean> {
+    const updateValues = ({
+      deletedAt: new Date(),
+      userId,
+    } as unknown) as QueryDeepPartialEntity<T>;
+    const result = await this.repository
+      .createQueryBuilder()
+      .update()
+      .set(updateValues)
+      .where({ id, tenantId })
+      .execute();
     return result.affected > 0;
   }
 }

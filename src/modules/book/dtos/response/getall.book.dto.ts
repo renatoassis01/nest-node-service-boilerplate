@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseFindManyResponseDTO } from '../../../../common/base/dtos/response/basefindmany.dto';
-import { IFindManyResult } from '../../../../common/interfaces/findmanyresult';
+import { BaseGetAllResponseDTO } from '../../../../common/base/dtos/response/base.getall.dto';
+import { IGetAllResult } from '../../../../common/interfaces/getallresult';
 import { BookResponseDTO } from './book.dto';
 
-export class FindAllBookResultResponseDTO extends BaseFindManyResponseDTO {
+export class GetAllBookResponseDTO extends BaseGetAllResponseDTO {
   @ApiProperty({ description: 'Books', type: [BookResponseDTO] })
   readonly data: BookResponseDTO[];
 
-  constructor(data: IFindManyResult) {
+  constructor(data: IGetAllResult) {
     super();
     this.count = data.count;
     this.limit = data.limit;

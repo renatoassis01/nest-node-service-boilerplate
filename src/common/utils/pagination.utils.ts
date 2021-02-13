@@ -1,6 +1,6 @@
 import { IBasePaginationDTO } from '../base/interfaces/base.pagination.dto';
 import { IBuildPaginetedOptions } from '../interfaces/buildpaginetedoptions';
-import { IFindManyResult } from '../interfaces/findmanyresult';
+import { IGetAllResult } from '../interfaces/getallresult';
 import { IPaginationQuery } from '../interfaces/paginationquery';
 import {
   DEFAULT_PAGINATION_PAGE,
@@ -10,7 +10,7 @@ import {
 export class PaginationUtils {
   public static buildPaginatedFindMany(
     buildOptions: IBuildPaginetedOptions,
-  ): IFindManyResult {
+  ): IGetAllResult {
     const limit = buildOptions?.size || DEFAULT_PAGINATION_SIZE;
     const totalPages = PaginationUtils.getTotalPages(buildOptions.count, limit);
     return {

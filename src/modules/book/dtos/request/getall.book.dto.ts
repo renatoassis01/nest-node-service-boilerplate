@@ -1,8 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
-import { BaseFindManyRequestDTO } from '../../../../common/base/dtos/request/base.findmany.dto';
+import { BaseGetAllRequestDTO } from '../../../../common/base/dtos/request/base.getall.dto';
 
-export class FindAllBookRequestDTO extends BaseFindManyRequestDTO {
+export class GetAllBookRequestDTO extends BaseGetAllRequestDTO {
   @ApiPropertyOptional({
     description: 'name book',
   })

@@ -12,8 +12,6 @@ import {
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
-  ApiExtraModels,
-  ApiHeader,
   ApiHeaders,
   ApiInternalServerErrorResponse,
   ApiResponse,
@@ -24,8 +22,8 @@ import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
 import { BookService } from '../services/book.service';
 import { BookResponseDTO } from '../dtos/response/book.dto';
 import { TenantId } from '../../../common/utils/decorators/tenantId.decorator';
-import { FindAllBookRequestDTO } from '../dtos/request/findall.book.dto';
-import { FindAllBookResultResponseDTO } from '../dtos/response/findallresult.book.dto';
+import { GetAllBookRequestDTO } from '../dtos/request/getall.book.dto';
+import { GetAllBookResponseDTO } from '../dtos/response/getall.book.dto';
 import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
 import { UserId } from '../../../common/utils/decorators/userId.decorator';
 
@@ -67,31 +65,33 @@ export class BookController {
     return new BookResponseDTO(book);
   }
 
-  @Get(':id')
+  @Get('get-by-id/:id')
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully return',
   })
   @ApiResponse({ status: 404, description: 'Not found' })
-  async findById(
+  async getById(
     @TenantId() tenantId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<any> {
-    return await this.bookService.findById(tenantId, id);
+  ): Promise<BookResponseDTO> {
+    const result = await this.bookService.getById(tenantId, id);
+    return new BookResponseDTO(result);
   }
 
   @Get('get-all')
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully return',
-    type: FindAllBookResultResponseDTO,
+    type: GetAllBookResponseDTO,
   })
-  async findAll(
+  async getAll(
     @TenantId() tenantId: string,
-    @Query() filters: FindAllBookRequestDTO,
-  ): Promise<FindAllBookResultResponseDTO> {
-    const result = await this.bookService.findAll(tenantId, filters);
-    return new FindAllBookResultResponseDTO(result);
+    @Query() filters: GetAllBookRequestDTO,
+  ): Promise<GetAllBookResponseDTO> {
+    console.log(filters.withDeleted);
+    const result = await this.bookService.getAll(tenantId, filters);
+    return new GetAllBookResponseDTO(result);
   }
 
   @Delete(':id')
@@ -104,7 +104,7 @@ export class BookController {
     @TenantId() tenantId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<any> {
-    return await this.bookService.findById(tenantId, id);
+    return await this.bookService.getById(tenantId, id);
   }
 
   @Put(':id')

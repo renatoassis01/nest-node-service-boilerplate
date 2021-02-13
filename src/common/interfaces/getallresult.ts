@@ -1,4 +1,4 @@
-export interface IFindManyResult {
+export interface IGetAllResult {
   count: number;
   limit: number;
   page: number;

@@ -1,4 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
 import {
   IsString,
   IsEnum,
@@ -8,11 +9,13 @@ import {
   IsUUID,
 } from 'class-validator';
 import { SortOrderEnum } from '../../../enums/sortorder.enum';
+import { TransformUtils } from '../../../utils/transform.utils';
+import { IsBoolean } from '../../../utils/validators/isboolean.validator';
 import { IsInteger } from '../../../utils/validators/isinterger.validator';
 import { IBaseOrderByDTO } from '../../interfaces/base.orderby.dto';
 import { IBasePaginationDTO } from '../../interfaces/base.pagination.dto';
 
-export class BaseFindManyRequestDTO
+export class BaseGetAllRequestDTO
   implements IBasePaginationDTO, IBaseOrderByDTO {
   @ApiPropertyOptional({
     description: 'Records page',
@@ -57,4 +60,13 @@ export class BaseFindManyRequestDTO
   @IsUUID()
   @IsOptional()
   userId?: string;
+
+  @ApiPropertyOptional({
+    description: 'Records deleteds',
+    type: Boolean,
+  })
+  @Transform((value) => TransformUtils.ToBoolean(value))
+  @IsBoolean()
+  @IsOptional()
+  withDeleted?: boolean;
 }

@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookRepository } from '../repository/book.repository';
 import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
-import { FindAllBookRequestDTO } from '../dtos/request/findall.book.dto';
+import { GetAllBookRequestDTO } from '../dtos/request/getall.book.dto';
 import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
-import { IFindManyResult } from '../../../common/interfaces/findmanyresult';
+import { IGetAllResult } from '../../../common/interfaces/getallresult';
 import { BookModel } from '../../../models/book.model';
 
 @Injectable()
@@ -23,15 +23,15 @@ export class BookService {
     return book;
   }
 
-  public async findAll(
+  public async getAll(
     tenantId: string,
-    filters: FindAllBookRequestDTO,
-  ): Promise<IFindManyResult> {
-    return await this.repository.findAll(tenantId, filters);
+    filters: GetAllBookRequestDTO,
+  ): Promise<IGetAllResult> {
+    return await this.repository.getAll(tenantId, filters);
   }
 
-  public async findById(tenantId: string, id: string): Promise<BookModel> {
-    const book = await this.repository.findById(tenantId, id);
+  public async getById(tenantId: string, id: string): Promise<BookModel> {
+    const book = await this.repository.getById(tenantId, id);
     if (!book) throw new NotFoundException('Book not found');
     return book;
   }
@@ -42,7 +42,7 @@ export class BookService {
     id: string,
     dto: UpdateBookRequestDTO,
   ): Promise<void> {
-    const book = await this.repository.partialUpdate(tenantId, userId, id, dto);
+    const book = await this.repository.updateById(tenantId, userId, id, dto);
     if (!book) throw new NotFoundException('Book not found');
   }
 }

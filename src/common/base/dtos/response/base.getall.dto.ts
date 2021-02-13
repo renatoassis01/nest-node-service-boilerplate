@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IFindManyResult } from '../../../interfaces/findmanyresult';
+import { IGetAllResult } from '../../../interfaces/getallresult';
 
-export abstract class BaseFindManyResponseDTO implements IFindManyResult {
+export abstract class BaseGetAllResponseDTO implements IGetAllResult {
   @ApiProperty({
     description: 'Total records stored',
   })

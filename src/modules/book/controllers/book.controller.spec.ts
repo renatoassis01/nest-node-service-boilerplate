@@ -9,6 +9,7 @@ import { BookRepository } from '../repository/book.repository';
 import { BookResponseDTO } from '../dtos/response/book.dto';
 import { getCustomRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
+import { FakerUtils } from '../../../common/utils/faker.utils';
 
 const book = new BookModelBuilder()
   .withId()
@@ -42,7 +43,9 @@ describe('Suite tests Book', () => {
           provide: getCustomRepositoryToken(BookRepository),
           useValue: {
             create: jest.fn(),
-            findById: jest.fn(),
+            getById: jest.fn(),
+            getAll: jest.fn(),
+            findByName: jest.fn(),
           },
         },
       ],
@@ -50,7 +53,6 @@ describe('Suite tests Book', () => {
     app = moduleRef.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
-
     bookService = moduleRef.get<BookService>(BookService);
     bookController = moduleRef.get<BookController>(BookController);
     bookRepository = await moduleRef.resolve<BookRepository>(
@@ -106,14 +108,27 @@ describe('Suite tests Book', () => {
         .expect(HttpStatus.CREATED);
     });
   });
-  describe('GET /books', () => {
+  describe('GET /books/get-by-id/{id}', () => {
     it('should return Book not found', async () => {
       await expect(async () => {
-        bookRepository.findById = jest
+        bookRepository.getById = jest
           .fn()
           .mockResolvedValue(new Promise((resolve) => resolve(undefined)));
-        await bookController.findById(book.tenantId, book.id);
+        await bookController.getById(book.tenantId, book.id);
       }).rejects.toThrow('Book not found');
+    });
+
+    it('should return a Book', async () => {
+      jest
+        .spyOn(bookRepository, 'getById')
+        .mockResolvedValue(new Promise((resolve) => resolve(book)));
+      const result = await request(app.getHttpServer())
+        .get(`/books/get-by-id/${FakerUtils.faker().random.uuid()}`)
+        .set('userid', book.userId)
+        .set('usertenantid', book.tenantId)
+        .expect(HttpStatus.OK);
+
+      expect(result.body).toEqual(new BookResponseDTO(book));
     });
   });
 });
