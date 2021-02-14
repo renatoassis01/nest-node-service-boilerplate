@@ -40,6 +40,6 @@ export class PaginationUtils {
   }
 
   public static getSkip(take: number, page: number): number {
-    return page > DEFAULT_PAGINATION_PAGE ? take * (page - 1) : page;
+    return take * (page - 1);
   }
 }

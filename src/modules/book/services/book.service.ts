@@ -41,8 +41,15 @@ export class BookService {
     userId: string,
     id: string,
     dto: UpdateBookRequestDTO,
-  ): Promise<void> {
-    const book = await this.repository.updateById(tenantId, userId, id, dto);
+  ): Promise<BookModel> {
+    const result = await this.repository.updateById(tenantId, userId, id, dto);
+    if (!result) throw new NotFoundException('Book not found');
+    return result;
+  }
+
+  public async deleteById(tenantId: string, id: string): Promise<string> {
+    const book = await this.repository.deleteById(tenantId, id);
     if (!book) throw new NotFoundException('Book not found');
+    return 'Book deleted';
   }
 }

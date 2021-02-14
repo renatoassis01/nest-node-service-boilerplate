@@ -24,10 +24,9 @@ describe('Suite tests CreateBookRequestDTO', () => {
       expect(errors.length).toEqual(0);
     });
   });
-  it('should true dto whit errors', () => {
+  it('should true dto whith errors', () => {
     const createBookDTO = new CreateBookRequestDTO();
     createBookDTO.name = book.name;
-    createBookDTO.author = book.author;
     createBookDTO.isbn = book.isbn;
     return validator.validate(createBookDTO).then((errors) => {
       expect(errors.length).toBeLessThanOrEqual(1);

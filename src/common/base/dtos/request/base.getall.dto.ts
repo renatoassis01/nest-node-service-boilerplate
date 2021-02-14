@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import {
   IsString,
   IsEnum,
@@ -54,7 +54,7 @@ export class BaseGetAllRequestDTO
   sortOrder: SortOrderEnum;
 
   @ApiPropertyOptional({
-    description: 'User',
+    description: 'User request',
     type: String,
   })
   @IsUUID()

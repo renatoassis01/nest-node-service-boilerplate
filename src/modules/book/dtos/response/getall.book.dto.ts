@@ -12,6 +12,7 @@ export class GetAllBookResponseDTO extends BaseGetAllResponseDTO {
     this.count = data.count;
     this.limit = data.limit;
     this.page = data.page;
+    this.totalPages = data.totalPages;
     this.data =
       data?.data?.length > 0
         ? data.data.map((book) => new BookResponseDTO(book))

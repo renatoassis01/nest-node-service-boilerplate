@@ -23,7 +23,7 @@ export interface IBaseRepository<T extends BaseModel> {
     userId: string,
     id: string,
     partialEntity: QueryDeepPartialEntity<T>,
-  ): Promise<boolean>;
+  ): Promise<T>;
 
   deleteById(tenantId: string, id: string): Promise<boolean>;
   removeById(tenantId: string, id: string, userId: string): Promise<boolean>;

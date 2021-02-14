@@ -52,7 +52,7 @@ describe('Suite teste PaginationUtils', () => {
   describe('Tests function getPaginationTakeAndSkip', () => {
     it('call function with default parameters', () => {
       const result = PaginationUtils.getPaginationTakeAndSkip();
-      expect(result.skip).toEqual(DEFAULT_PAGINATION_PAGE);
+      expect(result.skip).toEqual(0);
       expect(result.take).toEqual(DEFAULT_PAGINATION_SIZE);
     });
   });

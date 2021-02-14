@@ -41,7 +41,8 @@ import { UserId } from '../../../common/utils/decorators/userId.decorator';
   },
 ])
 @ApiUnauthorizedResponse({
-  description: 'Validation failed (tenantid  is expected)',
+  description:
+    'Validation failed (tenantid  is expected) or Validation failed (userid  is expected)',
 })
 @ApiBadRequestResponse({
   description: 'Bad Request',
@@ -70,7 +71,7 @@ export class BookController {
     status: 200,
     description: 'The record has been successfully return',
   })
-  @ApiResponse({ status: 404, description: 'Not found' })
+  @ApiResponse({ status: 404, description: 'Book not found' })
   async getById(
     @TenantId() tenantId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -82,29 +83,15 @@ export class BookController {
   @Get('get-all')
   @ApiResponse({
     status: 200,
-    description: 'The record has been successfully return',
+    description: 'The records has been successfully return',
     type: GetAllBookResponseDTO,
   })
   async getAll(
     @TenantId() tenantId: string,
     @Query() filters: GetAllBookRequestDTO,
   ): Promise<GetAllBookResponseDTO> {
-    console.log(filters.withDeleted);
     const result = await this.bookService.getAll(tenantId, filters);
     return new GetAllBookResponseDTO(result);
-  }
-
-  @Delete(':id')
-  @ApiResponse({
-    status: 200,
-    description: 'The record has been successfully return',
-  })
-  @ApiResponse({ status: 404, description: 'Forbidden.' })
-  async delete(
-    @TenantId() tenantId: string,
-    @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<any> {
-    return await this.bookService.getById(tenantId, id);
   }
 
   @Put(':id')
@@ -112,13 +99,27 @@ export class BookController {
     status: 200,
     description: 'The record has been successfully return',
   })
-  @ApiResponse({ status: 404, description: 'Forbidden.' })
+  @ApiResponse({ status: 404, description: 'Book not found' })
   async update(
     @TenantId() tenantId: string,
     @UserId() userId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() update: UpdateBookRequestDTO,
-  ): Promise<any> {
-    return await this.bookService.update(tenantId, userId, id, update);
+  ): Promise<BookResponseDTO> {
+    const result = await this.bookService.update(tenantId, userId, id, update);
+    return new BookResponseDTO(result);
+  }
+
+  @Delete(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'The record has been successfully deleted',
+  })
+  @ApiResponse({ status: 404, description: 'Book not found' })
+  async deleteById(
+    @TenantId() tenantId: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<string> {
+    return await this.bookService.deleteById(tenantId, id);
   }
 }

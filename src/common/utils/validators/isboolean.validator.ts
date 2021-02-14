@@ -1,8 +1,4 @@
-import {
-  isBoolean,
-  registerDecorator,
-  ValidationOptions,
-} from 'class-validator';
+import { registerDecorator, ValidationOptions } from 'class-validator';
 
 /**
  * Valida se é um boolean
@@ -20,7 +16,13 @@ export function IsBoolean(validationOptions?: ValidationOptions) {
       },
       validator: {
         validate(data: any) {
-          if (data.value === 'false' || data.value === 'true') return true;
+          if (
+            data.value === 'false' ||
+            data.value === 'true' ||
+            data.value === true ||
+            data.value === false
+          )
+            return true;
         },
       },
     });

@@ -83,7 +83,7 @@ export class BaseRepository<T extends BaseModel>
     userId: string,
     id: string,
     partialEntity: QueryDeepPartialEntity<T>,
-  ): Promise<boolean> {
+  ): Promise<T> {
     const result = await this.repository
       .createQueryBuilder()
       .update()
@@ -91,7 +91,7 @@ export class BaseRepository<T extends BaseModel>
       .where({ id, tenantId })
       .execute();
 
-    return result.affected > 0;
+    return result.raw;
   }
 
   public async deleteById(tenantId: string, id: string): Promise<boolean> {
