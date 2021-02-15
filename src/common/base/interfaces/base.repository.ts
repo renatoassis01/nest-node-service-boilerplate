@@ -1,6 +1,5 @@
 import { IGetAllResult } from '../../interfaces/getallresult';
 import { DeepPartial } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BaseModel } from '../models/base.model';
 
 export interface IBaseRepository<T extends BaseModel> {
@@ -22,7 +21,7 @@ export interface IBaseRepository<T extends BaseModel> {
     tenantId: string,
     userId: string,
     id: string,
-    partialEntity: QueryDeepPartialEntity<T>,
+    partialEntity: DeepPartial<T>,
   ): Promise<T>;
 
   deleteById(tenantId: string, id: string): Promise<boolean>;

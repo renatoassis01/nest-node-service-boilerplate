@@ -82,15 +82,15 @@ export class BaseRepository<T extends BaseModel>
     tenantId: string,
     userId: string,
     id: string,
-    partialEntity: QueryDeepPartialEntity<T>,
+    partialEntity: DeepPartial<T>,
   ): Promise<T> {
     const result = await this.repository
       .createQueryBuilder()
       .update()
       .set({ ...partialEntity, userId })
       .where({ id, tenantId })
+      //.returning('*') //  ReturningStatementNotSupportedError: OUTPUT or RETURNING clause only supported by Microsoft SQL Server or PostgreSQL databases.
       .execute();
-
     return result.raw;
   }
 
