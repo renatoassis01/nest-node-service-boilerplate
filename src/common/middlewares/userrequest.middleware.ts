@@ -7,12 +7,12 @@ import { Request, Response, NextFunction } from 'express';
 import * as uuid from 'uuid-validate';
 
 @Injectable()
-export class TenantIDMiddleware implements NestMiddleware {
+export class UserRequestMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    const tenantid = req.header('tenantid');
-    if (!tenantid || !uuid(tenantid))
+    const userId = req.header('userid');
+    if (!userId || !uuid(userId))
       throw new UnauthorizedException(
-        'Validation failed (tenantid  is expected)',
+        'Validation failed (userId  is expected)',
       );
 
     next();

@@ -5,9 +5,9 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 import { IBaseAuditModel } from '../interfaces/base.audit.model';
-import { IBaseTenantIdModel } from '../interfaces/base.tenantid.model';
+import { IBaseTenantModel } from '../interfaces/base.tenant.model';
 
-export abstract class BaseModel implements IBaseAuditModel, IBaseTenantIdModel {
+export abstract class BaseModel implements IBaseAuditModel, IBaseTenantModel {
   @Column({ type: 'uuid' })
   userId: string;
 

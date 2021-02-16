@@ -5,7 +5,7 @@ import { BaseModel } from '../models/base.model';
 export interface IBaseRepository<T extends BaseModel> {
   create(tenantId: string, userId: string, object: DeepPartial<T>): Promise<T>;
   getById(
-    tenantid: string,
+    tenantId: string,
     id: string,
     relations?: string[],
     withDeleted?: boolean,

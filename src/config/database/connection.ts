@@ -6,7 +6,7 @@ import { BookModel } from '../../models/book.model';
 dotenv.config();
 
 const migrations = {
-  migrations: ['../database/migrations/*.ts'],
+  migrations: ['../database/migrations/*.{ts,js}'],
   cli: {
     migrationsDir: '../database/migrations',
   },
@@ -26,14 +26,13 @@ export function getDatabaseConfigConnection(): TypeOrmModuleOptions {
   };
 }
 
-export function getDatabaseConfigConnectionTest(): TypeOrmModuleOptions {
+export function getDatabaseConfigConnectionQA(): TypeOrmModuleOptions {
   return {
     name: 'default',
     type: 'sqlite',
     database: ':memory:',
     migrationsRun: true,
     synchronize: true,
-    entities: [BookModel],
     ...migrations,
   };
 }

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { UserIDMiddleware } from './userId.middleware';
+import { UserRequestMiddleware } from './userrequest.middleware';
 
 const RETURN_VALUE = 'test';
 
@@ -26,11 +26,11 @@ class TestController {
 })
 class TestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(UserIDMiddleware).forRoutes('*');
+    consumer.apply(UserRequestMiddleware).forRoutes('*');
   }
 }
 
-describe('Suite tests for UserIDMiddleware', () => {
+describe('Suite tests for UserRequestMiddleware', () => {
   let app: INestApplication;
 
   beforeEach(async () => {

@@ -1,7 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EntityRepository, getConnection } from 'typeorm';
-import { getDatabaseConfigConnectionTest } from '../../../config/database/connection';
+import { getDatabaseConfigConnectionQA } from '../../../config/database/connection';
 import { FakerUtils } from '../../utils/faker.utils';
 import { BaseRepository } from './base.repository';
 import { BuilerTodoModel } from './utils/builder/builder.todo.model';
@@ -29,7 +29,7 @@ describe('Suite test BaseRepository', () => {
   let todoRepository: TodoRepository;
 
   beforeEach(async () => {
-    const databaseOptions = getDatabaseConfigConnectionTest();
+    const databaseOptions = getDatabaseConfigConnectionQA();
     const moduleRef = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({ ...databaseOptions, entities: [TodoModel] }),
@@ -110,4 +110,5 @@ describe('Suite test BaseRepository', () => {
       expect(updated.done).toEqual(true);
     });
   });
+  describe('Suite tests [getAll]', async () => {});
 });

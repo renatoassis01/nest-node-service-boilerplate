@@ -1,14 +1,20 @@
+import { EnvironmentEnum } from '../common/enums/enviroment.enum';
+
 export class Environment {
   public static getServicePort(): number {
     return parseInt(process.env.PORT, 10) || 3000;
   }
 
   public static getCurrentEnvironment(): string {
-    return process.env.CURRENT_ENVIRONMENT || 'DEV';
+    return process.env.CURRENT_ENVIRONMENT || EnvironmentEnum.DEV;
   }
 
   public static isEnvironmentDev(): boolean {
-    return process.env.CURRENT_ENVIRONMENT === 'DEV';
+    return process.env.CURRENT_ENVIRONMENT === EnvironmentEnum.DEV;
+  }
+
+  public static isEnvironmentPrd(): boolean {
+    return process.env.CURRENT_ENVIRONMENT === EnvironmentEnum.PRD;
   }
 
   public static getDatabaseConfig() {
