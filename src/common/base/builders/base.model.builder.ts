@@ -1,7 +1,9 @@
 import { FakerUtils } from '../../utils/faker.utils';
 import { IBaseBuilder } from '../interfaces/base.builder';
+import { BaseModel } from '../models/base.model';
 
-export class BaseModelBuiler<T, U> implements IBaseBuilder<T, U> {
+export class BaseModelBuiler<T, U extends BaseModel>
+  implements IBaseBuilder<T, U> {
   protected builder: any;
   private instance: any;
   constructor() {
@@ -24,7 +26,7 @@ export class BaseModelBuiler<T, U> implements IBaseBuilder<T, U> {
     return this.instance;
   }
   withUpdatedAt(updatedAt?: Date): T {
-    this.builder.updateAt = updatedAt ? updatedAt : new Date();
+    this.builder.updatedAt = updatedAt ? updatedAt : new Date();
     return this.instance;
   }
   withDeletedAt(deletedAt?: Date): T {
