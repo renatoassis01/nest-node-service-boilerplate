@@ -48,8 +48,8 @@ class EnvironmentVariables {
   @IsNumber()
   DB_PORT: number;
 
-  @IsNumber()
-  DB_HOST: number;
+  @IsString()
+  DB_HOST: string;
 
   @IsString()
   DB_USER: string;

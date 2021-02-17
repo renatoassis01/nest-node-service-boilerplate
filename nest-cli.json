@@ -1,14 +1,4 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src/modules",
-  "generateOptions": {
-    "resource": {
-      
-    }
-      "services",
-      "models"
-    ]
-      
-    
-  }
+  "sourceRoot": "src/modules"
 }
