@@ -6,6 +6,24 @@
 $ npm install
 ```
 
+## create .env file with
+
+```
+PORT=3000
+CURRENT_ENVIRONMENT=DEV
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=book
+```
+
+## startup docker
+
+```
+make updbp
+```
+
 ## Running the app
 
 ```bash
@@ -25,9 +43,6 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
 # test coverage
 $ npm run test:cov
 ```
@@ -46,7 +61,7 @@ $ npm run test:cov
 
 [x] Docker-compose, makefile,
 
-[] Testes em memoria
+[x] Testes em memoria
 
 [] Heltcheck
 
