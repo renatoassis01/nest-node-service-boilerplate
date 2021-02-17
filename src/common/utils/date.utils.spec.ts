@@ -1,5 +1,5 @@
 import { DateUtils } from './date.utils';
-import { DateFormatEnum } from './enums/date.format.enum';
+import { DateFormatEnum } from '../enums/date.format.enum';
 
 describe('Suite tests DateUtils', () => {
   describe('Suite tests formatDate', () => {

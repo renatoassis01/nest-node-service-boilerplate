@@ -1,11 +1,44 @@
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EntityRepository, getConnection } from 'typeorm';
+import {
+  Column,
+  Entity,
+  EntityRepository,
+  getConnection,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { getDatabaseConfigConnectionQA } from '../../../config/database/connection';
 import { FakerUtils } from '../../utils/faker.utils';
+import { BaseModelBuiler } from '../builders/base.model.builder';
+import { BaseModel } from '../models/base.model';
 import { BaseRepository } from './base.repository';
-import { BuilerTodoModel } from './utils/builder/builder.todo.model';
-import { TodoModel } from './utils/model/todo.model';
+
+@Entity('todos')
+export class TodoModel extends BaseModel {
+  @PrimaryGeneratedColumn('uuid')
+  id?: string;
+
+  @Column()
+  name: string;
+
+  @Column()
+  done: boolean;
+}
+
+export class BuilerTodoModel extends BaseModelBuiler<
+  BuilerTodoModel,
+  TodoModel
+> {
+  withName(): BuilerTodoModel {
+    this.builder.name = FakerUtils.faker().random.words(2);
+    return this;
+  }
+
+  withDone(completed?: boolean): BuilerTodoModel {
+    this.builder.done = completed ? completed : false;
+    return this;
+  }
+}
 
 @EntityRepository(TodoModel)
 class TodoRepository extends BaseRepository<TodoModel> {}

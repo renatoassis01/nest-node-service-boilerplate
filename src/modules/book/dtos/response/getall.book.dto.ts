@@ -8,11 +8,7 @@ export class GetAllBookResponseDTO extends BaseGetAllResponseDTO {
   readonly data: BookResponseDTO[];
 
   constructor(data: IGetAllResult) {
-    super();
-    this.count = data.count;
-    this.limit = data.limit;
-    this.page = data.page;
-    this.totalPages = data.totalPages;
+    super(data);
     this.data =
       data?.data?.length > 0
         ? data.data.map((book) => new BookResponseDTO(book))

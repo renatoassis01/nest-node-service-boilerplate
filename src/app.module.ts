@@ -9,20 +9,29 @@ import { BookModule } from './modules/book/book.module';
 import { TenantMiddleware } from './common/middlewares/tenant.middleware';
 import { RequestLoggerMiddleware } from './common/middlewares/logger.middleware';
 import { getDatabaseConfigConnection } from './config/database/connection';
+import { ConfigModule } from '@nestjs/config';
+import { validate } from './config/enviroment';
+import { UserRequestMiddleware } from './common/middlewares/userrequest.middleware';
 
 const databaseOptions = {
   ...getDatabaseConfigConnection(),
   synchronize: true,
 };
 @Module({
-  imports: [TypeOrmModule.forRoot(databaseOptions), BookModule],
+  imports: [
+    ConfigModule.forRoot({
+      validate,
+    }),
+    TypeOrmModule.forRoot(databaseOptions),
+    BookModule,
+  ],
   controllers: [],
   providers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(TenantMiddleware, RequestLoggerMiddleware)
+      .apply(TenantMiddleware, UserRequestMiddleware, RequestLoggerMiddleware)
       .exclude({ path: '/api-json', method: RequestMethod.GET })
       .forRoutes('*');
   }

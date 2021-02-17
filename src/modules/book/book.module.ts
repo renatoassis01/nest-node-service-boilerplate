@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BookService } from './services/book.service';
 import { BookController } from './controllers/book.controller';
-import { BookRepository } from './repository/book.repository';
+import { BookRepository } from './repositories/book.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({

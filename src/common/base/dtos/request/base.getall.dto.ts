@@ -12,11 +12,8 @@ import { SortOrderEnum } from '../../../enums/sortorder.enum';
 import { TransformUtils } from '../../../utils/transform.utils';
 import { IsBoolean } from '../../../utils/validators/isboolean.validator';
 import { IsInteger } from '../../../utils/validators/isinterger.validator';
-import { IBaseOrderByDTO } from '../../interfaces/base.orderby.dto';
-import { IBasePaginationDTO } from '../../interfaces/base.pagination.dto';
-
-export class BaseGetAllRequestDTO
-  implements IBasePaginationDTO, IBaseOrderByDTO {
+import { IBaseFilter } from '../../interfaces/base.filter.dto';
+export class BaseGetAllRequestDTO implements IBaseFilter {
   @ApiPropertyOptional({
     description: 'Records page',
     type: Number,
@@ -69,4 +66,13 @@ export class BaseGetAllRequestDTO
   @IsBoolean()
   @IsOptional()
   withDeleted?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Records with relations',
+    type: Boolean,
+  })
+  @Transform((value) => TransformUtils.ToBoolean(value))
+  @IsBoolean()
+  @IsOptional()
+  withRelations?: boolean;
 }

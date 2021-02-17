@@ -5,7 +5,7 @@ import { BookService } from '../services/book.service';
 import { BookModelBuilder } from '../utils/builders/book.model.builder';
 import { BookController } from './book.controller';
 import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
-import { BookRepository } from '../repository/book.repository';
+import { BookRepository } from '../repositories/book.repository';
 import { BookResponseDTO } from '../dtos/response/book.dto';
 import { getCustomRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';

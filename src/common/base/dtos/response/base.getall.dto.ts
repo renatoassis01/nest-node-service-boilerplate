@@ -23,4 +23,16 @@ export class BaseGetAllResponseDTO implements IGetAllResult {
   totalPages: number;
 
   data: any[];
+
+  constructor(data: {
+    count: number;
+    limit: number;
+    page: number;
+    totalPages: number;
+  }) {
+    this.count = data.count;
+    this.limit = data.limit;
+    this.page = data.page;
+    this.totalPages = data.totalPages;
+  }
 }

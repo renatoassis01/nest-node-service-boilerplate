@@ -6,6 +6,7 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { IGetAllResult } from '../../interfaces/getallresult';
+import { GetAllFilterPartialType } from '../../types/getallfilterpartial.type';
 import { PaginationUtils } from '../../utils/pagination.utils';
 import { QueryUtils } from '../../utils/query.utils';
 import { IBaseRepository } from '../interfaces/base.repository';
@@ -38,14 +39,14 @@ export class BaseRepository<T extends BaseModel>
   }
 
   /**
-   * busca generica. Não busca registros inatívos
+   * busca generica
    * @param tenantid
    * @param filters
    * @param relations
    */
   public async getAll(
     tenantId: string,
-    filters: any,
+    filters: GetAllFilterPartialType<any>,
     relations?: string[],
   ): Promise<IGetAllResult> {
     const {
