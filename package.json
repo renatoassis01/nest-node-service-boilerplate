@@ -10,6 +10,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:quick": "pretty-quick --staged",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -61,6 +62,8 @@
     "faker": "^5.3.1",
     "husky": "^5.0.9",
     "jest": "^26.6.3",
+    "pre-commit": "^1.2.2",
+    "pre-push": "^0.1.1",
     "prettier": "^2.1.2",
     "pretty-quick": "^3.1.0",
     "supertest": "^6.0.0",
@@ -70,12 +73,8 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.0.5"
   },
-  "husky": {
-    "hooks": {
-      "precommit": "pretty-quick --staged",
-      "prepush": "jest"
-    }
-  },
+  "pre-commit": "format:quick",
+  "pre-push": "test",
   "jest": {
     "moduleFileExtensions": [
       "js",

@@ -27,15 +27,6 @@ import { GetAllBookResponseDTO } from '../dtos/response/getall.book.dto';
 import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
 import { UserId } from '../../../common/utils/decorators/userId.decorator';
 
-
-
-
-
-
-
-
-
-
 @ApiTags('books')
 @ApiHeaders([
   {
