@@ -1,4 +1,5 @@
 {
   "max-len": 80,
-  "debug": true
+  "debug": false,
+  "showInvalidHeader": false
 }
