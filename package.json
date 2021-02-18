@@ -74,7 +74,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged",
-      "pre-push": "npm run test"
+      "pre-push": "jest"
     }
   },
   "jest": {
