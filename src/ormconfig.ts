@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
-const connetions = require('./config/database/connection');
-const { config } = connetions;
+const { config } = require('./config/database/connection');
 
 module.exports = {
   ...config,
