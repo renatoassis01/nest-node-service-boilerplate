@@ -9,21 +9,33 @@ import {
 import { AppModule } from './app.module';
 import { ValidationPipe } from './common/utils/pipes/validator.pipe';
 import { Environment } from './config/enviroment';
-
+import * as chalk from 'chalk';
 const API_DOCS_PATH = 'api';
 const PORT = Environment.getServicePort();
 
 function banner(): void {
-  const display = `
-  █░█ ▀█▀ ▄▀█ ▀▄▀   ▀█▀ █▀▀ ▄▀█ █▀▄▀█
-  ▀▀█ ░█░ █▀█ █░█   ░█░ ██▄ █▀█ █░▀░█
+  const display = chalk.cyanBright(`
+ █░█ ▀█▀ ▄▀█ ▀▄▀   ▀█▀ █▀▀ ▄▀█ █▀▄▀█
+ ▀▀█ ░█░ █▀█ █░█   ░█░ ██▄ █▀█ █░▀░█
+ 
+ `);
 
-  CURRENT ENVIRONMENT: ${Environment.getCurrentEnvironment()}
-  PORT: ${PORT}`;
   console.log(display);
   if (Environment.getCurrentEnvironment() === 'DEV') {
-    console.log(`API DOCS BROWSER: https://localhot:${PORT}/${API_DOCS_PATH}`);
-    console.log(`API DOCS JSON: https://localhot:${PORT}/api-json`);
+    console.log(
+      `CURRENT ENVIRONMENT: ${chalk.green(
+        Environment.getCurrentEnvironment(),
+      )}`,
+    );
+    console.log(`PORT: ${chalk.green(PORT)}`);
+    console.log(
+      `API DOCS BROWSER: ${chalk.green(
+        `https://localhot:${PORT}/${API_DOCS_PATH}`,
+      )}`,
+    );
+    console.log(
+      `API DOCS JSON: ${chalk.green(`https://localhot:${PORT}/api-json`)}`,
+    );
   }
 }
 
