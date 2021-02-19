@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const path = require('path');
-const { config } = require('./config/database/connection');
+import * as path from 'path';
+import { config } from './config/database/connection';
 
 module.exports = {
   ...config,

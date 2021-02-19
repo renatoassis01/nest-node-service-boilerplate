@@ -27,7 +27,7 @@ make up-postgres-daemom
 ## Run migrations
 
 ```bash
-npm run migrations:up
+npm run migration:up
 ```
 
 ## Running the app
@@ -84,3 +84,5 @@ https://github.com/jmcdo29/testing-nestjs/tree/master/apps
 https://circleci.com/blog/getting-started-with-nestjs-and-automatic-testing/
 
 https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md
+
+https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/naming-convention.md
