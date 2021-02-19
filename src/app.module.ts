@@ -17,7 +17,6 @@ import { HealthController } from './modules/app/controllers/helth.controller';
 
 const databaseOptions = {
   ...getDatabaseConfigConnection(),
-  synchronize: true,
 };
 @Module({
   imports: [

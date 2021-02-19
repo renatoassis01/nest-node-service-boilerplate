@@ -20,18 +20,24 @@ DB_NAME=book
 
 ## startup docker
 
+```bash
+make up-postgres-daemom
 ```
-make updbp
+
+## Run migrations
+
+```bash
+npm run migrations:up
 ```
 
 ## Running the app
 
 ```bash
-# development
-$ npm run start
-
 # watch mode
 $ npm run start:dev
+
+# development
+$ npm run start
 
 # production mode
 $ npm run start:prod

@@ -5,9 +5,8 @@ const { config } = connetions;
 
 module.exports = {
   ...config,
-  logging: true,
-  entities: [path.join(__dirname, './modules/**/models/*.model.{ts,js}')],
-  migrations: [path.join(__dirname, './config/database/migrations/*{.ts,.js}')],
+  entities: [path.join(__dirname, 'modules/**/models/*.model{.ts,.js}')],
+  migrations: [path.join(__dirname, 'config/database/migrations/*{.ts,.js}')],
   cli: {
     migrationsDir: 'src/config/database/migrations',
   },

@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export const config: TypeOrmModuleOptions = {
+  name: 'default',
   type: 'postgres',
   host: Environment.getDatabaseConfig().host,
   port: Environment.getDatabaseConfig().port,
@@ -16,7 +17,6 @@ export const config: TypeOrmModuleOptions = {
 
 export function getDatabaseConfigConnection(): TypeOrmModuleOptions {
   return {
-    name: 'default',
     ...config,
     entities: ['dist/modules/**/models/*.model.{ts,js}'],
   };
