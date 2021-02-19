@@ -63,7 +63,7 @@ $ npm run test:cov
 
 [x] Testes em memoria
 
-[] Heltcheck
+[x] Heltcheck
 
 [x] configurar migrations
 
