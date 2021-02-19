@@ -18,10 +18,10 @@ DB_PASSWORD=postgres
 DB_NAME=book
 ```
 
-## startup docker
+## Startup PostgreSQL(via docker)
 
 ```bash
-make up-postgres-daemom
+make up-postgres-daemon
 ```
 
 ## Run migrations
