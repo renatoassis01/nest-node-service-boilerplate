@@ -27,14 +27,20 @@ function banner(): void {
         Environment.getCurrentEnvironment(),
       )}`,
     );
-    console.log(`PORT: ${chalk.green(PORT)}`);
     console.log(
-      `API DOCS BROWSER: ${chalk.green(
-        `https://localhot:${PORT}/${API_DOCS_PATH}`,
+      `API doc access the browser at: ${chalk.green(
+        `http://localhost:${PORT}/${API_DOCS_PATH}`,
       )}`,
     );
     console.log(
-      `API DOCS JSON: ${chalk.green(`https://localhot:${PORT}/api-json`)}`,
+      `API doc JSON access the browser at: ${chalk.green(
+        `http://localhost:${PORT}/api-json`,
+      )}`,
+    );
+    console.log(
+      `Starting development server at: ${chalk.green(
+        `http://localhost:${PORT}`,
+      )}`,
     );
   }
 }
