@@ -1,4 +1,4 @@
-import { BookModel } from '../../../models/book.model';
+import { BookModel } from '../models/book.model';
 import { EntityRepository } from 'typeorm';
 import { BaseRepository } from '../../../common/base/repositories/base.repository';
 @EntityRepository(BookModel)

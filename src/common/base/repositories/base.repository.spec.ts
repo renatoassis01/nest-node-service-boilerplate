@@ -1,49 +1,16 @@
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {
-  Column,
-  Entity,
-  EntityRepository,
-  getConnection,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { EntityRepository, getConnection } from 'typeorm';
 import { getDatabaseConfigConnectionQA } from '../../../config/database/connection';
 import { FakerUtils } from '../../utils/faker.utils';
-import { BaseModelBuiler } from '../builders/base.model.builder';
-import { BaseModel } from '../models/base.model';
 import { BaseRepository } from './base.repository';
-
-@Entity('todos')
-export class TodoModel extends BaseModel {
-  @PrimaryGeneratedColumn('uuid')
-  id?: string;
-
-  @Column()
-  name: string;
-
-  @Column()
-  done: boolean;
-}
-
-export class BuilerTodoModel extends BaseModelBuiler<
-  BuilerTodoModel,
-  TodoModel
-> {
-  withName(): BuilerTodoModel {
-    this.builder.name = FakerUtils.faker().random.words(2);
-    return this;
-  }
-
-  withDone(completed?: boolean): BuilerTodoModel {
-    this.builder.done = completed ? completed : false;
-    return this;
-  }
-}
+import { BuilderTodoModel } from './builders/todo.builder';
+import { TodoModel } from './models/todo.model';
 
 @EntityRepository(TodoModel)
 class TodoRepository extends BaseRepository<TodoModel> {}
 
-const todo1 = new BuilerTodoModel()
+const todo1 = new BuilderTodoModel()
   .withCreateAt()
   .withDeletedAt()
   .withUpdatedAt()

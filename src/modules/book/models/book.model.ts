@@ -1,4 +1,4 @@
-import { BaseModel } from '../common/base/models/base.model';
+import { BaseModel } from '../../../common/base/models/base.model';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('books')

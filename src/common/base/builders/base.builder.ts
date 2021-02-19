@@ -2,8 +2,7 @@ import { FakerUtils } from '../../utils/faker.utils';
 import { IBaseBuilder } from '../interfaces/base.builder';
 import { BaseModel } from '../models/base.model';
 
-export class BaseModelBuiler<T, U extends BaseModel>
-  implements IBaseBuilder<T, U> {
+export class BaseBuilder<T, U extends BaseModel> implements IBaseBuilder<T, U> {
   protected builder: any;
   private instance: any;
   constructor() {

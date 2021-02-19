@@ -1,23 +1,20 @@
 import { FakerUtils } from '../../utils/faker.utils';
 import { BaseModel } from '../models/base.model';
-import { BaseModelBuiler } from './base.model.builder';
+import { BaseBuilder } from './base.builder';
 
 class PersonModel extends BaseModel {
   id: string;
   name: string;
 }
 
-class PersonModelBuilder extends BaseModelBuiler<
-  PersonModelBuilder,
-  PersonModel
-> {
+class PersonModelBuilder extends BaseBuilder<PersonModelBuilder, PersonModel> {
   public withName(name: string): PersonModelBuilder {
     this.builder.name = name;
     return this;
   }
 }
 
-describe('Suite testes BaseModelBuilder', () => {
+describe('Suite testes BaseBuilder', () => {
   const name = FakerUtils.faker().name.firstName();
 
   it('create instance entity with property default', () => {

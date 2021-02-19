@@ -5,7 +5,7 @@ import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
 import { GetAllBookRequestDTO } from '../dtos/request/getall.book.dto';
 import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
 import { IGetAllResult } from '../../../common/interfaces/getallresult';
-import { BookModel } from '../../../models/book.model';
+import { BookModel } from '../models/book.model';
 import { GetAllFilterPartialType } from '../../../common/types/getallfilterpartial.type';
 
 @Injectable()

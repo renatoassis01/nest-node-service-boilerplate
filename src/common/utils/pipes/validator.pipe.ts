@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
-import { FormatErrorsValidator } from '../format.errors.validator';
+import { FormatErrorsUtils } from './utils/formaterrors.utils';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
@@ -18,7 +18,7 @@ export class ValidationPipe implements PipeTransform<any> {
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
     if (errors.length > 0) {
-      const custom = FormatErrorsValidator.format(errors);
+      const custom = FormatErrorsUtils.format(errors);
       throw new BadRequestException(custom);
     }
     return value;

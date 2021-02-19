@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { DateFormatEnum } from '../enums/date.format.enum';
+import { DateFormatEnum } from '../enums/dateformat.enum';
 
 export class DateUtils {
   public static formatDate(date: Date, outputFormat: DateFormatEnum): string {

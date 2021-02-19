@@ -4,8 +4,10 @@ upd:
 	docker-compose up -d
 updb:
 	docker-compose up -d db mongo
-updbp:
-	docker-compose -f docker-compose.postgres.yaml up
+up-postgres-daemom:
+	docker-compose -f docker-compose.postgres.yaml up -d 
+up-postgres:
+	docker-compose -f docker-compose.postgres.yaml up -d 
 
 down:
 	docker-compose down

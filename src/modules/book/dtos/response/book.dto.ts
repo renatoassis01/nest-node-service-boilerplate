@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { BookModel } from '../../../../models/book.model';
+import { BookModel } from '../../models/book.model';
 
 export class BookResponseDTO {
   @ApiProperty({

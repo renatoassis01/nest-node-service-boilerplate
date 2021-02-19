@@ -1,7 +1,7 @@
 import { ValidationError } from 'class-validator';
 
 // 4 niveis de erros
-export class FormatErrorsValidator {
+export class FormatErrorsUtils {
   public static format(data: ValidationError[]) {
     return data.map((s) => ({
       property: s.property,

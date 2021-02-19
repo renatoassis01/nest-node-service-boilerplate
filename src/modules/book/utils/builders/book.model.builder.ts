@@ -1,10 +1,7 @@
-import { BaseModelBuiler } from '../../../../common/base/builders/base.model.builder';
-import { BookModel } from '../../../../models/book.model';
+import { BaseBuilder } from '../../../../common/base/builders/base.builder';
+import { BookModel } from '../../models/book.model';
 
-export class BookModelBuilder extends BaseModelBuiler<
-  BookModelBuilder,
-  BookModel
-> {
+export class BookModelBuilder extends BaseBuilder<BookModelBuilder, BookModel> {
   withName(name: string): BookModelBuilder {
     this.builder.name = name;
     return this;

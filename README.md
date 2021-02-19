@@ -65,7 +65,7 @@ $ npm run test:cov
 
 [] Heltcheck
 
-[] configurar migrations
+[x] configurar migrations
 
 [] Implementar logger
 
@@ -76,3 +76,5 @@ https://wanago.io/2020/07/13/api-nestjs-testing-services-controllers-integration
 https://github.com/jmcdo29/testing-nestjs/tree/master/apps
 
 https://circleci.com/blog/getting-started-with-nestjs-and-automatic-testing/
+
+https://github.com/typeorm/typeorm/blob/master/docs/using-ormconfig.md
