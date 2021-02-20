@@ -9,6 +9,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
+    './.eslint-ts-naming-convention-seidor.js',
   ],
   root: true,
   env: {
@@ -21,5 +22,14 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    'max-classes-per-file': ['error', 1],
   },
+  overrides: [
+    {
+      files: ['*.spec.ts'],
+      rules: {
+        'max-classes-per-file': 'off',
+      },
+    },
+  ],
 };

@@ -6,8 +6,6 @@ import { GetAllBookRequestDTO } from '../dtos/request/getall.book.dto';
 import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
 import { IGetAllResult } from '../../../common/interfaces/getallresult';
 import { BookModel } from '../models/book.model';
-import { GetAllFilterPartialType } from '../../../common/types/getallfilterpartial.type';
-
 @Injectable()
 export class BookService {
   constructor(
@@ -49,8 +47,8 @@ export class BookService {
   }
 
   public async deleteById(tenantId: string, id: string): Promise<string> {
-    const book = await this.repository.deleteById(tenantId, id);
-    if (!book) throw new NotFoundException('Book not found');
+    const isBookDeleted = await this.repository.deleteById(tenantId, id);
+    if (!isBookDeleted) throw new NotFoundException('Book not found');
     return 'Book deleted';
   }
 }

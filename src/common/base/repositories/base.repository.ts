@@ -9,6 +9,7 @@ import { IGetAllResult } from '../../interfaces/getallresult';
 import { GetAllFilterPartialType } from '../../types/getallfilterpartial.type';
 import { PaginationUtils } from '../../utils/pagination.utils';
 import { QueryUtils } from '../../utils/query.utils';
+import { BaseGetAllRequestDTO } from '../dtos/request/base.getall.dto';
 import { IBaseRepository } from '../interfaces/base.repository';
 import { BaseModel } from '../models/base.model';
 
@@ -46,7 +47,7 @@ export class BaseRepository<T extends BaseModel>
    */
   public async getAll(
     tenantId: string,
-    filters: GetAllFilterPartialType<any>,
+    filters: any,
     relations?: string[],
   ): Promise<IGetAllResult> {
     const {
@@ -57,6 +58,7 @@ export class BaseRepository<T extends BaseModel>
       withDeleted,
       ...fieldsModel
     } = filters;
+
     const { take, skip } = PaginationUtils.getPaginationTakeAndSkip({
       page,
       size,
