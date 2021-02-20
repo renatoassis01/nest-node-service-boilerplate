@@ -16,7 +16,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js'],
+  ignorePatterns: ['.eslintrc.js', '.eslint-ts-naming-convention-seidor.js'],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -29,6 +29,12 @@ module.exports = {
       files: ['*.spec.ts'],
       rules: {
         'max-classes-per-file': 'off',
+      },
+    },
+    {
+      ignorePatterns: ['**/migrations/*'],
+      rules: {
+        '@typescript-eslint/naming-convention': 'off',
       },
     },
   ],
