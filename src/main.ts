@@ -2,24 +2,24 @@ import 'reflect-metadata';
 import { INestApplication } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from './common/utils/pipes/validator.pipe';
-import { Environment } from './config/enviroment';
-import { SwaggerUtils } from './modules/app/utils/swaggerCustom.utils';
-import { InfoUtils } from './modules/app/utils/infoUtils';
-const API_DOCS_PATH = 'api';
-const PORT = Environment.getServicePort();
+import { ValidationPipe } from './system/pipes/validator.pipe';
+import { EnvironmentConfig } from './config/enviroment.config';
+import { SwaggerUtils } from './config/utils/swagger.utils';
+import { InfoUtils } from './config/utils/info.utils';
+const ROOT_API_PATH = 'api';
+const PORT = EnvironmentConfig.getServicePort();
 
 async function setupNestApplication(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix(ROOT_API_PATH);
   return app;
 }
 
 async function bootstrap(): Promise<void> {
   const app = await setupNestApplication();
-  SwaggerUtils.setupSwaggerModule(app, API_DOCS_PATH);
+  SwaggerUtils.setupSwaggerModule(app, ROOT_API_PATH);
   await app.listen(PORT);
-  InfoUtils.banner(API_DOCS_PATH);
+  InfoUtils.banner(ROOT_API_PATH);
 }
 bootstrap();

@@ -5,7 +5,7 @@ import { IPaginationQuery } from '../interfaces/paginationquery';
 import {
   DEFAULT_PAGINATION_PAGE,
   DEFAULT_PAGINATION_SIZE,
-} from './constants.utils';
+} from '../constants/constants';
 
 export class PaginationUtils {
   public static buildPaginatedFindMany(

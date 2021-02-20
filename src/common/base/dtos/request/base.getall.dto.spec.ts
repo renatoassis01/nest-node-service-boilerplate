@@ -1,5 +1,5 @@
 import { SortOrderEnum } from '../../../enums/sortorder.enum';
-import { DEFAULT_FIELDNAME_ORDER_BY } from '../../../utils/constants.utils';
+import { DEFAULT_FIELDNAME_ORDER_BY } from '../../../constants/constants';
 import { BaseGetAllRequestDTO } from './base.getall.dto';
 import { Validator } from 'class-validator';
 const validator = new Validator();

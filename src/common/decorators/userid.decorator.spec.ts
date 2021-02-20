@@ -1,7 +1,7 @@
 import { Controller, Get, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as request from 'supertest';
-import { FakerUtils } from '../faker.utils';
+import { FakerUtils } from '../utils/faker.utils';
 import { UserId } from './userId.decorator';
 
 @Controller()

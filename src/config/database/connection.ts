@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { Environment } from '../enviroment';
+import { EnvironmentConfig } from '../enviroment.config';
 
 import * as dotenv from 'dotenv';
 dotenv.config();
@@ -7,12 +7,12 @@ dotenv.config();
 export const config: TypeOrmModuleOptions = {
   name: 'default',
   type: 'postgres',
-  host: Environment.getDatabaseConfig().host,
-  port: Environment.getDatabaseConfig().port,
-  username: Environment.getDatabaseConfig().username,
-  password: Environment.getDatabaseConfig().password,
-  database: Environment.getDatabaseConfig().database,
-  logging: Environment.isEnvironmentDev(),
+  host: EnvironmentConfig.getDatabaseConfig().host,
+  port: EnvironmentConfig.getDatabaseConfig().port,
+  username: EnvironmentConfig.getDatabaseConfig().username,
+  password: EnvironmentConfig.getDatabaseConfig().password,
+  database: EnvironmentConfig.getDatabaseConfig().database,
+  logging: EnvironmentConfig.isEnvironmentDev(),
 };
 
 export function getDatabaseConfigConnection(): TypeOrmModuleOptions {

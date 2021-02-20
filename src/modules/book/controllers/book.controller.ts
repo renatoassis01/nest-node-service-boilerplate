@@ -21,11 +21,11 @@ import {
 import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
 import { BookService } from '../services/book.service';
 import { BookResponseDTO } from '../dtos/response/book.dto';
-import { TenantId } from '../../../common/utils/decorators/tenantId.decorator';
+import { TenantId } from '../../../common/decorators/tenantId.decorator';
 import { GetAllBookRequestDTO } from '../dtos/request/getall.book.dto';
 import { GetAllBookResponseDTO } from '../dtos/response/getall.book.dto';
 import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
-import { UserId } from '../../../common/utils/decorators/userId.decorator';
+import { UserId } from '../../../common/decorators/userId.decorator';
 
 @ApiTags('books')
 @ApiHeaders([

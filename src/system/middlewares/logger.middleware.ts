@@ -9,11 +9,7 @@ export class RequestLoggerMiddleware implements NestMiddleware {
     const { ip, method, baseUrl } = request;
     response.on('close', () => {
       const { statusCode } = response;
-      const contentLength = response.get('content-length');
-
-      this.logger.log(
-        `${method} ${baseUrl} ${statusCode} ${contentLength} - ${ip}`,
-      );
+      this.logger.log(`${method} ${baseUrl} ${statusCode} - ${ip}`);
     });
 
     next();

@@ -6,14 +6,14 @@ import {
 } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookModule } from './modules/book/book.module';
-import { TenantMiddleware } from './common/middlewares/tenant.middleware';
-import { RequestLoggerMiddleware } from './common/middlewares/logger.middleware';
+import { TenantMiddleware } from './system/middlewares/tenant.middleware';
+import { RequestLoggerMiddleware } from './system/middlewares/logger.middleware';
 import { getDatabaseConfigConnection } from './config/database/connection';
 import { ConfigModule } from '@nestjs/config';
-import { validate } from './config/enviroment';
-import { UserRequestMiddleware } from './common/middlewares/userrequest.middleware';
+import { UserRequestMiddleware } from './system/middlewares/userrequest.middleware';
 import { TerminusModule } from '@nestjs/terminus';
-import { HealthController } from './modules/app/controllers/helth.controller';
+import { HealthController } from './helth.controller';
+import { validate } from './system/dtos/enviromentconfigvalidator.dto';
 
 const databaseOptions = {
   ...getDatabaseConfigConnection(),

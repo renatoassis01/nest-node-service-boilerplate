@@ -1,6 +1,6 @@
 import { IBaseOrderByDTO } from '../base/interfaces/base.orderby.dto';
 import { SortOrderEnum } from '../enums/sortorder.enum';
-import { DEFAULT_FIELDNAME_ORDER_BY } from './constants.utils';
+import { DEFAULT_FIELDNAME_ORDER_BY } from '../constants/constants';
 import { QueryUtils } from './query.utils';
 
 describe('Suite teste QueryUtils', () => {

@@ -1,8 +1,9 @@
-import { Environment } from '../../../config/enviroment';
+import { EnvironmentConfig } from '../enviroment.config';
 
 import * as chalk from 'chalk';
+import { EnvironmentEnum } from '../../common/enums/enviroment.enum';
 
-const PORT = Environment.getServicePort();
+const PORT = EnvironmentConfig.getServicePort();
 export class InfoUtils {
   public static banner(apiPath: string): void {
     const display = chalk.cyanBright(`
@@ -12,10 +13,10 @@ export class InfoUtils {
        `);
 
     console.log(display);
-    if (Environment.getCurrentEnvironment() === 'DEV') {
+    if (EnvironmentConfig.getCurrentEnvironment() === EnvironmentEnum.DEV) {
       console.log(
         `CURRENT ENVIRONMENT: ${chalk.green(
-          Environment.getCurrentEnvironment(),
+          EnvironmentConfig.getCurrentEnvironment(),
         )}`,
       );
       console.log(

@@ -1,6 +1,6 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { ValidationPipe } from '../../../common/utils/pipes/validator.pipe';
+import { ValidationPipe } from '../../../system/pipes/validator.pipe';
 import { BookService } from '../services/book.service';
 import { BookModelBuilder } from '../utils/builders/book.model.builder';
 import { BookController } from './book.controller';

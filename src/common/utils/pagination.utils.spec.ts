@@ -2,7 +2,7 @@ import { IBuildPaginetedOptions } from '../interfaces/buildpaginetedoptions';
 import {
   DEFAULT_PAGINATION_PAGE,
   DEFAULT_PAGINATION_SIZE,
-} from './constants.utils';
+} from '../constants/constants';
 import { PaginationUtils } from './pagination.utils';
 
 const data = {
