@@ -6,10 +6,8 @@ import {
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { IGetAllResult } from '../../interfaces/getallresult';
-import { GetAllFilterPartialType } from '../../types/getallfilterpartial.type';
 import { PaginationUtils } from '../../utils/pagination.utils';
 import { QueryUtils } from '../../utils/query.utils';
-import { BaseGetAllRequestDTO } from '../dtos/request/base.getall.dto';
 import { IBaseRepository } from '../interfaces/base.repository';
 import { BaseModel } from '../models/base.model';
 
@@ -47,26 +45,22 @@ export class BaseRepository<T extends BaseModel>
    */
   public async getAll(
     tenantId: string,
-    filters: any,
+    filters?: any,
     relations?: string[],
   ): Promise<IGetAllResult> {
-    const {
-      page,
-      size,
-      sortOrder,
-      sortParam,
-      withDeleted,
-      ...fieldsModel
-    } = filters;
-
+    const page = filters?.page;
+    const size = filters?.size;
+    const sortOrder = filters?.sortOrder;
+    const sortParam = filters?.sortParam;
+    const withDeleted = filters?.withDeleted || false;
     const { take, skip } = PaginationUtils.getPaginationTakeAndSkip({
       page,
       size,
     });
 
     const options: FindManyOptions = {
-      where: !!fieldsModel ? { tenantId, ...fieldsModel } : { tenantId },
       withDeleted,
+      where: QueryUtils.buildWhere(tenantId, filters),
       order: QueryUtils.buildOrderBy({ sortOrder, sortParam }),
       take,
       skip,

@@ -7,10 +7,10 @@ import {
   ValidateIf,
   IsOptional,
   IsUUID,
+  IsBoolean,
 } from 'class-validator';
 import { SortOrderEnum } from '../../../enums/sortorder.enum';
 import { TransformUtils } from '../../../utils/transform.utils';
-import { IsBoolean } from '../../../utils/validators/isboolean.validator';
 import { IsInteger } from '../../../utils/validators/isinterger.validator';
 import { IBaseFilter } from '../../interfaces/base.filter.dto';
 export class BaseGetAllRequestDTO implements IBaseFilter {
@@ -62,16 +62,16 @@ export class BaseGetAllRequestDTO implements IBaseFilter {
     description: 'Records deleteds',
     type: Boolean,
   })
-  @Transform((value) => TransformUtils.ToBoolean(value))
-  @IsBoolean()
+  @Transform((obj) => TransformUtils.ToBoolean(obj))
   @IsOptional()
+  @IsBoolean()
   withDeleted?: boolean;
 
   @ApiPropertyOptional({
     description: 'Records with relations',
     type: Boolean,
   })
-  @Transform((value) => TransformUtils.ToBoolean(value))
+  @Transform((obj) => TransformUtils.ToBoolean(obj))
   @IsBoolean()
   @IsOptional()
   withRelations?: boolean;

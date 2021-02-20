@@ -1,8 +1,7 @@
 import 'reflect-metadata';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from './system/pipes/validator.pipe';
 import { EnvironmentConfig } from './config/enviroment.config';
 import { SwaggerUtils } from './config/utils/swagger.utils';
 import { InfoUtils } from './config/utils/info.utils';
@@ -11,7 +10,18 @@ const PORT = EnvironmentConfig.getServicePort();
 
 async function setupNestApplication(): Promise<INestApplication> {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      whitelist: true,
+      validateCustomDecorators: true,
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+    }),
+  );
   app.setGlobalPrefix(ROOT_API_PATH);
   return app;
 }

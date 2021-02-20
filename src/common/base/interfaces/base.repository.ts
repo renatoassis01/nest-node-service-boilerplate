@@ -1,7 +1,6 @@
 import { IGetAllResult } from '../../interfaces/getallresult';
 import { DeepPartial } from 'typeorm';
 import { BaseModel } from '../models/base.model';
-import { GetAllFilterPartialType } from '../../types/getallfilterpartial.type';
 
 export interface IBaseRepository<T extends BaseModel> {
   create(tenantId: string, userId: string, object: DeepPartial<T>): Promise<T>;
@@ -14,7 +13,7 @@ export interface IBaseRepository<T extends BaseModel> {
 
   getAll(
     tenantId: string,
-    filters: GetAllFilterPartialType<any>,
+    filters: any,
     relations?: string[],
   ): Promise<IGetAllResult>;
 

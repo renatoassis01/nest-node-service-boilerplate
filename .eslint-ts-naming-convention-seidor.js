@@ -6,7 +6,7 @@ module.exports = {
         selector: 'variable',
         types: ['boolean'],
         format: ['camelCase', 'PascalCase'],
-        prefix: ['is', 'should', 'has', 'can', 'did', 'will'],
+        prefix: ['is', 'should', 'has', 'can', 'did', 'will', 'with', 'show'],
       },
       {
         selector: ['variable', 'function'],

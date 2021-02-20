@@ -2,6 +2,8 @@ import { IBaseOrderByDTO } from '../base/interfaces/base.orderby.dto';
 import { SortOrderEnum } from '../enums/sortorder.enum';
 import { DEFAULT_FIELDNAME_ORDER_BY } from '../constants/constants';
 import { QueryUtils } from './query.utils';
+import { IBaseFilter } from '../base/interfaces/base.filter.dto';
+import { FakerUtils } from './faker.utils';
 
 describe('Suite teste QueryUtils', () => {
   describe('Tests function buildOrderBy', () => {
@@ -26,6 +28,30 @@ describe('Suite teste QueryUtils', () => {
       };
       const order = QueryUtils.buildOrderBy(builder);
       expect(order).toEqual(sort);
+    });
+  });
+  describe('Tests function getFieldsModel', () => {
+    it('must be true if return object property omit', () => {
+      const filter: IBaseFilter = {
+        page: 1,
+        size: 10,
+        sortOrder: SortOrderEnum.ASC,
+        sortParam: 'name',
+        withDeleted: true,
+        withRelations: true,
+      };
+      const data = {
+        name: FakerUtils.faker().name.firstName(),
+        lastname: FakerUtils.faker().name.lastName(),
+        age: 33,
+      };
+      const result = QueryUtils.getFieldsModel({ ...filter, ...data });
+      expect(result).not.toContain('page');
+      expect(result).not.toContain('size');
+      expect(result).not.toContain('sortOrder');
+      expect(result).not.toContain('sortParam');
+      expect(result).not.toContain('withDeleted');
+      expect(result).not.toContain('withRelations');
     });
   });
 });
