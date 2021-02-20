@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
-import { FormatErrorsUtils } from './utils/formaterrors.utils';
+import { FormatErrorsUtils } from '../utils/formaterrors.utils';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
