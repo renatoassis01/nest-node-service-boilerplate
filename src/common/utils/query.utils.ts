@@ -2,7 +2,6 @@ import { IBaseOrderByDTO } from '../base/interfaces/base.orderby.dto';
 import { SortOrderEnum } from '../enums/sortorder.enum';
 import { DEFAULT_FIELDNAME_ORDER_BY } from '../constants/constants';
 import * as _ from 'lodash';
-import { Brackets, IsNull, Not, Raw } from 'typeorm';
 
 export class QueryUtils {
   public static buildOrderBy(
@@ -16,21 +15,30 @@ export class QueryUtils {
     return { [sortOptions.sortParam]: sortOptions.sortOrder };
   }
 
-  public static buildWhere(tenantId: string, filters: Record<string, unknown>) {
-    const fieldsModel = QueryUtils.getFieldsModel(filters);
+  public static buildWhere(
+    tenantId: string,
+    fieldsModel: Record<string, unknown>,
+  ) {
     return !!fieldsModel ? { tenantId, ...fieldsModel } : { tenantId };
   }
 
   public static getFieldsModel(
     filters: Record<string, unknown>,
-  ): Pick<any, string | number | symbol> {
-    return _.omit(filters, [
+    additionalFields?: string[],
+  ): Pick<Record<string, unknown>, never> {
+    const filterFields = [
       'page',
       'size',
       'sortOrder',
       'sortParam',
       'withDeleted',
       'withRelations',
-    ]);
+      'patternMatching',
+    ];
+
+    const fieldConcats = !!additionalFields
+      ? [...filterFields, ...additionalFields]
+      : filterFields;
+    return _.omit(filters, fieldConcats);
   }
 }
