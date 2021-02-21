@@ -42,7 +42,7 @@ describe('Suite teste QueryUtils', () => {
       withRelations: true,
       patternMatching: {
         field: 'name',
-        operator: OperatorQueryEnum.ILKE,
+        operator: OperatorQueryEnum.ILIKE,
         value: FakerUtils.faker().random.word(),
         pattern: PatternQueryEnum.END_WITH,
       },
@@ -54,6 +54,7 @@ describe('Suite teste QueryUtils', () => {
         lastname: FakerUtils.faker().name.lastName(),
         age: 33,
       };
+
       const result = QueryUtils.getFieldsModel({ ...filter, ...data });
       expect(result).not.toContain('page');
       expect(result).not.toContain('size');

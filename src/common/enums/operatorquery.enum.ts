@@ -1,6 +1,6 @@
 export enum OperatorQueryEnum {
   LIKE = 'LIKE',
-  ILKE = 'ILIKE',
+  ILIKE = 'ILIKE',
   NOT_LIKE = 'NOT_LIKE',
   NOT_ILIKE = 'NOT_ILIKE',
 }
