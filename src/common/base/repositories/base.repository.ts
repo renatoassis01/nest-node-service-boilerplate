@@ -53,6 +53,8 @@ export class BaseRepository<T extends BaseModel>
     const sortOrder = filters?.sortOrder;
     const sortParam = filters?.sortParam;
     const withDeleted = filters?.withDeleted || false;
+    const fieldsModel = QueryUtils.getFieldsModel(filters);
+
     const { take, skip } = PaginationUtils.getPaginationTakeAndSkip({
       page,
       size,
@@ -60,7 +62,7 @@ export class BaseRepository<T extends BaseModel>
 
     const options: FindManyOptions = {
       withDeleted,
-      where: QueryUtils.buildWhere(tenantId, filters),
+      where: QueryUtils.buildWhere(tenantId, fieldsModel),
       order: QueryUtils.buildOrderBy({ sortOrder, sortParam }),
       take,
       skip,

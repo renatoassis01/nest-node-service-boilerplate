@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsString,
   IsEnum,
@@ -8,11 +8,14 @@ import {
   IsOptional,
   IsUUID,
   IsBoolean,
+  IsDate,
+  ValidateNested,
 } from 'class-validator';
 import { SortOrderEnum } from '../../../enums/sortorder.enum';
 import { TransformUtils } from '../../../utils/transform.utils';
 import { IsInteger } from '../../../utils/validators/isinterger.validator';
 import { IBaseFilter } from '../../interfaces/base.filter.dto';
+import { BasePatternMatchingRequestDTO } from './base.patternmatching.dto';
 export class BaseGetAllRequestDTO implements IBaseFilter {
   @ApiPropertyOptional({
     description: 'Records page',
@@ -59,6 +62,30 @@ export class BaseGetAllRequestDTO implements IBaseFilter {
   userId?: string;
 
   @ApiPropertyOptional({
+    description: 'Record creation date',
+    type: String,
+  })
+  @IsDate()
+  @IsOptional()
+  createAt?: Date;
+
+  @ApiPropertyOptional({
+    description: 'Record update date',
+    type: String,
+  })
+  @IsDate()
+  @IsOptional()
+  updatedAt?: Date;
+
+  @ApiPropertyOptional({
+    description: 'Record delete date',
+    type: String,
+  })
+  @IsDate()
+  @IsOptional()
+  deletedAt?: Date;
+
+  @ApiPropertyOptional({
     description: 'Records deleteds',
     type: Boolean,
   })
@@ -75,4 +102,13 @@ export class BaseGetAllRequestDTO implements IBaseFilter {
   @IsBoolean()
   @IsOptional()
   withRelations?: boolean;
+
+  @ApiPropertyOptional({
+    description: 'Pattern Matching',
+    type: BasePatternMatchingRequestDTO,
+  })
+  @ValidateNested()
+  @Type(() => BasePatternMatchingRequestDTO)
+  @IsOptional()
+  patternMatching: BasePatternMatchingRequestDTO;
 }
