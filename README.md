@@ -55,8 +55,6 @@ $ npm run test:cov
 
 ## Todo
 
-[] Implementar padrão de testes
-
 [x] Definir classes bases para repository, paginação
 
 [x] Definir DTO genericos
@@ -73,9 +71,26 @@ $ npm run test:cov
 
 [x] configurar migrations
 
+[x] Lint para nomes de arquivos
+
+[x] Implementar padrão de testes(precisa ser melhorado)
+
+[] Transações
+
+[] criar um guia de boas práticas
+
 [] Implementar logger
 
-[] Lint para nomes de arquivos
+Algumas decisões devem ser tomadas em conjunto:
+
+- abstract ou repository(classe que extende do repository base) Deixar acessar a classe repository do nest na service ou obrigar a impletar qualquer query no repository?
+
+- teste em memoria usando o sqlite vai restringir muito as opções de usar recursos do postgres.(Eu particulamente não acho válido perder recursos)
+  Por exemplo, os meninos do retail escrevem muitas queries brutas. Usando sqlite vai restringir(se tiver algum serviço dessas características).
+
+- escolher um serviço para implementar e validar várias ideia proposta no projeto.
+
+- usar o code artifact da AWS para publicar pacote privados, transformando algumas classe desse projeto em pacote(diminuir tempo de teste e centralizar as mudanças em classes bases)
 
 https://wanago.io/2020/07/13/api-nestjs-testing-services-controllers-integration-tests/
 
