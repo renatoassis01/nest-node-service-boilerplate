@@ -5,7 +5,7 @@ import { QueryUtils } from './query.utils';
 import { IBaseFilter } from '../base/interfaces/base.filter.dto';
 import { FakerUtils } from './faker.utils';
 import { OperatorQueryEnum } from '../enums/operatorquery.enum';
-import { PatternQueryEnum } from '../enums/patternqueryenum';
+import { PatternQueryEnum } from '../enums/patternquery.enum';
 
 describe('Suite teste QueryUtils', () => {
   describe('Tests function buildOrderBy', () => {
