@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getCustomRepositoryToken } from '@nestjs/typeorm';
+import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
 import { BookRepository } from '../repositories/book.repository';
 import { BookModelBuilder } from '../utils/builders/book.model.builder';
 import { BookService } from './book.service';
@@ -46,5 +47,11 @@ describe('BookService', () => {
     const repositorySpy = jest
       .spyOn(repository, 'create')
       .mockResolvedValue(new Promise((resolve) => resolve(book)));
+    const createBookDTO = new CreateBookRequestDTO();
+    createBookDTO.name = book.name;
+    createBookDTO.author = book.author;
+    createBookDTO.isbn = book.isbn;
+    await service.create(book.tenantId, book.userId, createBookDTO);
+    expect(repositorySpy).toBeCalled();
   });
 });
