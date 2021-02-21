@@ -122,4 +122,18 @@ export class BookController {
   ): Promise<string> {
     return await this.bookService.deleteById(tenantId, id);
   }
+
+  @Delete('remove-by-id/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'The record has been successfully removed logical',
+  })
+  @ApiResponse({ status: 404, description: 'Book not found' })
+  async removeById(
+    @TenantId() tenantId: string,
+    @UserId() userId: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<string> {
+    return await this.bookService.removeById(tenantId, id, userId);
+  }
 }

@@ -1,17 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional } from 'class-validator';
-import { IsNotBlank } from '../../../../common/utils/validators/isnotblank.validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 export class CreateBookRequestDTO {
   @ApiProperty({
     description: 'The name of book',
   })
-  @IsNotBlank('name', { message: 'not blank' })
+  @IsNotEmpty()
   name: string;
 
   @ApiProperty({
     description: 'number of ISBN',
   })
-  @IsNotBlank('isbn', { message: 'ibsn not blank' })
+  @IsNotEmpty()
   isbn: string;
 
   @ApiProperty({

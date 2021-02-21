@@ -11,7 +11,6 @@ describe('Suite tests DateUtils', () => {
       expect(format).toEqual('2021-02-15');
     });
     it('should be return string date formated DateFormatEnum.YYYY_MM_DD_HH_MM', () => {
-      console.log(new Date('02-15-2021 21:07'));
       const format = DateUtils.formatDate(
         new Date('02-15-2021 21:07'),
         DateFormatEnum.YYYY_MM_DD_HH_MM,

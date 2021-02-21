@@ -51,4 +51,18 @@ export class BookService {
     if (!isBookDeleted) throw new NotFoundException('Book not found');
     return 'Book deleted';
   }
+
+  public async removeById(
+    tenantId: string,
+    id: string,
+    userId: string,
+  ): Promise<string> {
+    const isBookDeleted = await this.repository.removeById(
+      tenantId,
+      id,
+      userId,
+    );
+    if (!isBookDeleted) throw new NotFoundException('Book not found');
+    return 'Book deleted';
+  }
 }

@@ -1,6 +1,5 @@
-import { HttpStatus, INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { ValidationPipe } from '../../../system/pipes/validator.pipe';
 import { BookService } from '../services/book.service';
 import { BookModelBuilder } from '../utils/builders/book.model.builder';
 import { BookController } from './book.controller';
@@ -68,7 +67,6 @@ describe('Suite tests Book', () => {
             getAll: jest.fn(),
             deleteById: jest.fn(),
             updateById: jest.fn(),
-            findByName: jest.fn(),
           },
         },
       ],
