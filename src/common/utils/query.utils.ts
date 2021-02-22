@@ -27,7 +27,7 @@ export class QueryUtils {
 
   public static getFieldsModel(
     filters: Record<string, unknown>,
-    additionalFields?: string[],
+    omitAdditionalFields?: string[],
   ): Pick<Record<string, unknown>, never> {
     const filterFields = [
       'page',
@@ -39,8 +39,8 @@ export class QueryUtils {
       'patternMatching',
     ];
 
-    const fieldConcats = !!additionalFields
-      ? [...filterFields, ...additionalFields]
+    const fieldConcats = !!omitAdditionalFields
+      ? [...filterFields, ...omitAdditionalFields]
       : filterFields;
     return _.omit(filters, fieldConcats);
   }

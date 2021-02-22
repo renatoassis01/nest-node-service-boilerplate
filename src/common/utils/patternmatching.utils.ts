@@ -23,7 +23,7 @@ export class PatternMatchingUtils {
       case PatternQueryEnum.IN_BETWEEN:
         return `'%${value}%'`;
       case PatternQueryEnum.END_WITH:
-        return `'%${value}%'`;
+        return `'${value}%'`;
     }
   }
 }
