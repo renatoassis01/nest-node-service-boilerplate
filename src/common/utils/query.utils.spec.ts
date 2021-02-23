@@ -40,12 +40,10 @@ describe('Suite teste QueryUtils', () => {
       sortParam: 'name',
       withDeleted: true,
       withRelations: true,
-      patternMatching: {
-        field: 'name',
-        operator: OperatorQueryEnum.ILIKE,
-        value: FakerUtils.faker().random.word(),
-        pattern: PatternQueryEnum.END_WITH,
-      },
+      fieldMatching: 'name',
+      operatorMatching: OperatorQueryEnum.ILIKE,
+      valueMatching: FakerUtils.faker().random.word(),
+      patternMatching: PatternQueryEnum.END_WITH,
     };
 
     it('must be true if return object property omit', () => {
@@ -62,6 +60,9 @@ describe('Suite teste QueryUtils', () => {
       expect(result).not.toContain('sortParam');
       expect(result).not.toContain('withDeleted');
       expect(result).not.toContain('withRelations');
+      expect(result).not.toContain('fieldMatching');
+      expect(result).not.toContain('operatorMatching');
+      expect(result).not.toContain('valueMatching');
       expect(result).not.toContain('patternMatching');
     });
     it('must be true if return object property omit additional field', () => {

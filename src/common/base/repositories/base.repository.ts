@@ -56,7 +56,6 @@ export class BaseRepository<T extends BaseModel>
     const fieldsModel = QueryUtils.getFieldsModel(filters);
     const whereCondition = QueryUtils.buildWhere(tenantId, fieldsModel);
     const patternMatchingConditon = QueryUtils.createPatternMatching(filters);
-    console.log(patternMatchingConditon);
     const { take, skip } = PaginationUtils.getPaginationTakeAndSkip({
       page,
       size,

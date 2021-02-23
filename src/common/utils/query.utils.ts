@@ -53,7 +53,14 @@ export class QueryUtils {
     pattern: IBasePatternDTO,
     getSql?: boolean,
   ): { [field: string]: unknown } {
-    if (_.isEmpty(pattern)) return;
+    if (
+      _.isEmpty(pattern?.fieldMatching) ||
+      _.isEmpty(pattern?.operatorMatching) ||
+      _.isEmpty(pattern?.valueMatching) ||
+      _.isEmpty(pattern?.patternMatching)
+    )
+      return;
+
     const {
       fieldMatching,
       operatorMatching,
