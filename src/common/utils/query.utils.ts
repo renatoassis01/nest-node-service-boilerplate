@@ -36,31 +36,48 @@ export class QueryUtils {
       'sortParam',
       'withDeleted',
       'withRelations',
+      'fieldMatching',
+      'operatorMatching',
+      'valueMatching',
       'patternMatching',
     ];
 
     const fieldConcats = !!omitAdditionalFields
       ? [...filterFields, ...omitAdditionalFields]
       : filterFields;
+
     return _.omit(filters, fieldConcats);
   }
 
   public static createPatternMatching(
-    patternMatching: IBasePatternDTO,
+    pattern: IBasePatternDTO,
     getSql?: boolean,
   ): { [field: string]: unknown } {
-    const { field, operator, value, pattern } = patternMatching;
+    if (_.isEmpty(pattern)) return;
+    const {
+      fieldMatching,
+      operatorMatching,
+      valueMatching,
+      patternMatching,
+    } = pattern;
 
-    const operatorQuery = PatternMatchingUtils.tranformOperator(operator);
-    const mountedPattern = PatternMatchingUtils.mountPattern(pattern, value);
+    const operatorQuery = PatternMatchingUtils.tranformOperator(
+      operatorMatching,
+    );
+    const mountedPattern = PatternMatchingUtils.mountPattern(
+      patternMatching,
+      valueMatching,
+    );
     if (getSql)
       return {
-        [field]: Raw(
+        [fieldMatching]: Raw(
           (alias) => `${alias} ${operatorQuery} ${mountedPattern}`,
-        ).getSql(field),
+        ).getSql(fieldMatching),
       };
     return {
-      [field]: Raw((alias) => `${alias} ${operatorQuery} ${mountedPattern}`),
+      [fieldMatching]: Raw(
+        (alias) => `${alias} ${operatorQuery} ${mountedPattern}`,
+      ),
     };
   }
 }

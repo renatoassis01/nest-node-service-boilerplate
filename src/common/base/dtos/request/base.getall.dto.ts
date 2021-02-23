@@ -9,13 +9,14 @@ import {
   IsUUID,
   IsBoolean,
   IsDate,
-  ValidateNested,
 } from 'class-validator';
+import { OperatorQueryEnum as OpqEnum } from '../../../enums/operatorquery.enum';
+import { PatternQueryEnum } from '../../../enums/patternquery.enum';
 import { SortOrderEnum } from '../../../enums/sortorder.enum';
 import { TransformUtils } from '../../../utils/transform.utils';
 import { IsInteger } from '../../../utils/validators/isinterger.validator';
 import { IBaseFilter } from '../../interfaces/base.filter.dto';
-import { BasePatternMatchingRequestDTO } from './base.patternmatching.dto';
+
 export class BaseGetAllRequestDTO implements IBaseFilter {
   @ApiPropertyOptional({
     description: 'Records page',
@@ -104,11 +105,45 @@ export class BaseGetAllRequestDTO implements IBaseFilter {
   withRelations?: boolean;
 
   @ApiPropertyOptional({
-    description: 'Pattern Matching',
-    type: BasePatternMatchingRequestDTO,
+    description: 'Pattern Matching field',
+    type: String,
   })
-  @ValidateNested()
-  @Type(() => BasePatternMatchingRequestDTO)
-  @IsOptional()
-  patternMatching: BasePatternMatchingRequestDTO;
+  @IsString()
+  @ValidateIf((prop) => !!prop.operatorMatching)
+  @IsNotEmpty()
+  fieldMatching: string;
+
+  @ApiPropertyOptional({
+    description: 'Correspondence operator',
+    enum: OpqEnum,
+  })
+  @IsEnum(OpqEnum, {
+    message: `must be ${OpqEnum.LIKE} or ${OpqEnum.ILIKE} or ${OpqEnum.NOT_LIKE} or ${OpqEnum.NOT_ILIKE}`,
+  })
+  @ValidateIf((prop) => !!prop.fieldMatching)
+  @IsNotEmpty()
+  operatorMatching: OpqEnum;
+
+  @ApiPropertyOptional({
+    description: 'Pattern Matching value',
+    type: String,
+  })
+  @IsString()
+  @ValidateIf(
+    (prop) =>
+      !!prop.patternMatching || !!prop.operatorMatching || !!prop.fieldMatching,
+  )
+  @IsNotEmpty()
+  valueMatching: string;
+
+  @ApiPropertyOptional({
+    description: 'Pattern correspondence',
+    enum: PatternQueryEnum,
+  })
+  @IsEnum(PatternQueryEnum, {
+    message: `must be ${PatternQueryEnum.START_WITH} or ${PatternQueryEnum.END_WITH} or ${PatternQueryEnum.IN_BETWEEN}`,
+  })
+  @ValidateIf((prop) => !!prop.valueMatching)
+  @IsNotEmpty()
+  patternMatching: PatternQueryEnum;
 }

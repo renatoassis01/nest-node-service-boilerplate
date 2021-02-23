@@ -19,11 +19,11 @@ export class PatternMatchingUtils {
   public static mountPattern(pattern: PatternQueryEnum, value: string): string {
     switch (pattern) {
       case PatternQueryEnum.START_WITH:
-        return `'%${value}'`;
+        return `'${value}%'`;
       case PatternQueryEnum.IN_BETWEEN:
         return `'%${value}%'`;
       case PatternQueryEnum.END_WITH:
-        return `'${value}%'`;
+        return `'%${value}'`;
     }
   }
 }
