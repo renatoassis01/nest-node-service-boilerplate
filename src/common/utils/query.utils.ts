@@ -4,7 +4,10 @@ import { DEFAULT_FIELDNAME_ORDER_BY } from '../constants/constants';
 import * as _ from 'lodash';
 import { IBasePatternDTO } from '../base/interfaces/base.pattern.dto';
 import { PatternMatchingUtils } from './patternmatching.utils';
-import { Raw } from 'typeorm';
+import { Between, FindOperator, Raw } from 'typeorm';
+import { IBaseAuditFilter } from '../base/interfaces/base.audit.filter';
+import { DateUtils } from './date.utils';
+import { DateFormatEnum } from '../enums/dateformat.enum';
 
 export class QueryUtils {
   public static buildOrderBy(
@@ -25,23 +28,13 @@ export class QueryUtils {
     return !!fieldsModel ? { tenantId, ...fieldsModel } : { tenantId };
   }
 
-  public static buildWhereAuditFields(fieldsModel: Record<string, unknown>) {
-    const startDate = fieldsModel?.startDateAudit;
-    const endDate = fieldsModel?.endDateAudit;
-    const fieldAudit = <string>fieldsModel?.fieldAudit;
-    let condidtion;
-    if (['createdAt', 'updatedAt', 'deleteAt'].includes(fieldAudit)) {
-      condidtion = {
-        [fieldAudit]: Raw(
-          (alias) =>
-            `CAST(${alias} as date) >= '${startDate}'::date AND CAST(${alias} as date) <= '${endDate}'::date`,
-        ),
-      };
-    }
-    return condidtion;
-  }
-
-  public static getFieldsModel(
+  /**
+   * Remove os campos do filtro padrão.
+   * @param filters
+   * - Campos adicionais que não fazem parte de um model pode ser passado aqui
+   * @param omitAdditionalFields
+   */
+  public static excludeFieldsFilter(
     filters: Record<string, unknown>,
     omitAdditionalFields?: string[],
   ): Pick<Record<string, unknown>, never> {
@@ -64,14 +57,12 @@ export class QueryUtils {
     const fieldConcats = !!omitAdditionalFields
       ? [...filterFields, ...omitAdditionalFields]
       : filterFields;
-
     return _.omit(filters, fieldConcats);
   }
 
-  public static createPatternMatching(
+  public static buildWherePatternMatching(
     pattern: IBasePatternDTO,
-    getSql?: boolean,
-  ): { [field: string]: unknown } {
+  ): { [field: string]: FindOperator<any> } | undefined {
     if (
       _.isEmpty(pattern?.fieldMatching) ||
       _.isEmpty(pattern?.operatorMatching) ||
@@ -94,16 +85,45 @@ export class QueryUtils {
       patternMatching,
       valueMatching,
     );
-    if (getSql)
-      return {
-        [fieldMatching]: Raw(
-          (alias) => `${alias} ${operatorQuery} ${mountedPattern}`,
-        ).getSql(fieldMatching),
-      };
+
     return {
       [fieldMatching]: Raw(
         (alias) => `${alias} ${operatorQuery} ${mountedPattern}`,
       ),
     };
+  }
+
+  /**
+   * Monta um filtro de data baseado no DTO de filtro
+   * fieldname >= startDate and fieldname <= endDate
+   * @param fieldsModel
+   */
+  public static buildWhereAuditFields(
+    fieldsModel: IBaseAuditFilter,
+  ): { [field: string]: FindOperator<any> } | undefined {
+    if (
+      _.isEmpty(fieldsModel?.startDateAudit) ||
+      _.isEmpty(fieldsModel?.endDateAudit) ||
+      _.isEmpty(fieldsModel?.fieldAudit)
+    )
+      return;
+    const { startDateAudit, endDateAudit, fieldAudit } = fieldsModel;
+    let condidtion: any;
+    if (['createdAt', 'updatedAt', 'deleteAt'].includes(fieldAudit)) {
+      const endDate = DateUtils.addDateToString(
+        endDateAudit,
+        1,
+        'day',
+        DateFormatEnum.YYYY_MM_DD,
+      );
+      condidtion = {
+        [fieldAudit]: Raw(
+          (alias) =>
+            `CAST(${alias} as date) >= '${startDateAudit}'::date
+              AND CAST(${alias} as date) < '${endDate}'::date`,
+        ),
+      };
+    }
+    return condidtion;
   }
 }

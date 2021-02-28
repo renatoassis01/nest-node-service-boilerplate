@@ -8,7 +8,7 @@ import {
 } from '../constants/constants';
 
 export class PaginationUtils {
-  public static buildPaginatedFindMany(
+  public static buildPaginatedGetAll(
     buildOptions: IBuildPaginetedOptions,
   ): IGetAllResult {
     const limit = buildOptions?.size || DEFAULT_PAGINATION_SIZE;
@@ -30,7 +30,7 @@ export class PaginationUtils {
     return Math.trunc(1 + numberPages);
   }
 
-  public static getPaginationTakeAndSkip(
+  public static getTakeAndSkip(
     pagination?: IBasePaginationDTO,
   ): IPaginationQuery {
     const take = pagination?.size || DEFAULT_PAGINATION_SIZE;

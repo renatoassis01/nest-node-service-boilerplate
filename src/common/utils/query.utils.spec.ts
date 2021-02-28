@@ -32,7 +32,7 @@ describe('Suite teste QueryUtils', () => {
       expect(order).toEqual(sort);
     });
   });
-  describe('Tests function getFieldsModel', () => {
+  describe('Tests function excludeFieldsFilter', () => {
     const filter: IBaseFilter = {
       page: 1,
       size: 10,
@@ -53,7 +53,7 @@ describe('Suite teste QueryUtils', () => {
         age: 33,
       };
 
-      const result = QueryUtils.getFieldsModel({ ...filter, ...data });
+      const result = QueryUtils.excludeFieldsFilter({ ...filter, ...data });
       expect(result).not.toContain('page');
       expect(result).not.toContain('size');
       expect(result).not.toContain('sortOrder');
@@ -72,7 +72,7 @@ describe('Suite teste QueryUtils', () => {
         age: 33,
         additionalField: FakerUtils.faker().random.word(),
       };
-      const result = QueryUtils.getFieldsModel({ ...filter, ...data }, [
+      const result = QueryUtils.excludeFieldsFilter({ ...filter, ...data }, [
         'additionalField',
       ]);
       expect(result).not.toContain('additionalField');
