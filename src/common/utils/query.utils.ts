@@ -109,7 +109,7 @@ export class QueryUtils {
       return;
     const { startDateAudit, endDateAudit, fieldAudit } = fieldsModel;
     let condidtion: any;
-    if (['createdAt', 'updatedAt', 'deleteAt'].includes(fieldAudit)) {
+    if (['createdAt', 'updatedAt', 'deletedAt'].includes(fieldAudit)) {
       const endDate = DateUtils.addDateToString(
         endDateAudit,
         1,

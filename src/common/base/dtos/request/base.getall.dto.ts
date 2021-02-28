@@ -80,7 +80,7 @@ export class BaseGetAllRequestDTO implements IBaseFilter {
     type: Date,
   })
   @Transform(({ value }) =>
-    DateUtils.formatDate(value, DateFormatEnum.YYYY_MM_DD),
+    DateUtils.formatDateToString(value, DateFormatEnum.YYYY_MM_DD),
   )
   @ValidateIf((prop) => !!prop.fieldAudit || !!prop.endDateAudit)
   @IsNotEmpty()
@@ -91,7 +91,7 @@ export class BaseGetAllRequestDTO implements IBaseFilter {
     type: Date,
   })
   @Transform(({ value }) =>
-    DateUtils.formatDate(value, DateFormatEnum.YYYY_MM_DD),
+    DateUtils.formatDateToString(value, DateFormatEnum.YYYY_MM_DD),
   )
   @ValidateIf((prop) => !!prop.fieldAudit || !!prop.startDateAudit)
   @IsNotEmpty()

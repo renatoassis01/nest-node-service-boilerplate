@@ -53,31 +53,31 @@ export class BaseRepository<T extends BaseModel>
     const sortOrder = filters?.sortOrder;
     const sortParam = filters?.sortParam;
     const withDeleted = filters?.withDeleted || false;
-    const fieldsModel = QueryUtils.getFieldsModel(filters);
+    const fieldsModel = QueryUtils.excludeFieldsFilter(filters);
     const whereCondition = QueryUtils.buildWhere(tenantId, fieldsModel);
     const whereConditionWithAudit = QueryUtils.buildWhereAuditFields(filters);
-    const patternMatchingConditon = QueryUtils.createPatternMatching(filters);
-    const { take, skip } = PaginationUtils.getPaginationTakeAndSkip({
+    const patternMatchingConditon = QueryUtils.buildWherePatternMatching(
+      filters,
+    );
+    const { take, skip } = PaginationUtils.getTakeAndSkip({
       page,
       size,
     });
 
     const options: FindManyOptions = {
       withDeleted,
-      where: patternMatchingConditon
-        ? {
-            ...whereCondition,
-            ...whereConditionWithAudit,
-            ...patternMatchingConditon,
-          }
-        : { ...whereCondition, ...whereConditionWithAudit },
+      where: {
+        ...whereCondition,
+        ...whereConditionWithAudit,
+        ...patternMatchingConditon,
+      },
       order: QueryUtils.buildOrderBy({ sortOrder, sortParam }),
       take,
       skip,
       relations,
     };
     const [data, count] = await this.repository.findAndCount(options);
-    return PaginationUtils.buildPaginatedFindMany({
+    return PaginationUtils.buildPaginatedGetAll({
       data,
       count,
       page,
