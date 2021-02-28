@@ -55,6 +55,7 @@ export class BaseRepository<T extends BaseModel>
     const withDeleted = filters?.withDeleted || false;
     const fieldsModel = QueryUtils.getFieldsModel(filters);
     const whereCondition = QueryUtils.buildWhere(tenantId, fieldsModel);
+    const whereConditionWithAudit = QueryUtils.buildWhereAuditFields(filters);
     const patternMatchingConditon = QueryUtils.createPatternMatching(filters);
     const { take, skip } = PaginationUtils.getPaginationTakeAndSkip({
       page,
@@ -64,8 +65,12 @@ export class BaseRepository<T extends BaseModel>
     const options: FindManyOptions = {
       withDeleted,
       where: patternMatchingConditon
-        ? { ...whereCondition, ...patternMatchingConditon }
-        : whereCondition,
+        ? {
+            ...whereCondition,
+            ...whereConditionWithAudit,
+            ...patternMatchingConditon,
+          }
+        : { ...whereCondition, ...whereConditionWithAudit },
       order: QueryUtils.buildOrderBy({ sortOrder, sortParam }),
       take,
       skip,

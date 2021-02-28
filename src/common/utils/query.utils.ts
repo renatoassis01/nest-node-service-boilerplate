@@ -25,6 +25,22 @@ export class QueryUtils {
     return !!fieldsModel ? { tenantId, ...fieldsModel } : { tenantId };
   }
 
+  public static buildWhereAuditFields(fieldsModel: Record<string, unknown>) {
+    const startDate = fieldsModel?.startDateAudit;
+    const endDate = fieldsModel?.endDateAudit;
+    const fieldAudit = <string>fieldsModel?.fieldAudit;
+    let condidtion;
+    if (['createdAt', 'updatedAt', 'deleteAt'].includes(fieldAudit)) {
+      condidtion = {
+        [fieldAudit]: Raw(
+          (alias) =>
+            `CAST(${alias} as date) >= '${startDate}'::date AND CAST(${alias} as date) <= '${endDate}'::date`,
+        ),
+      };
+    }
+    return condidtion;
+  }
+
   public static getFieldsModel(
     filters: Record<string, unknown>,
     omitAdditionalFields?: string[],
@@ -40,6 +56,9 @@ export class QueryUtils {
       'operatorMatching',
       'valueMatching',
       'patternMatching',
+      'fieldAudit',
+      'startDateAudit',
+      'endDateAudit',
     ];
 
     const fieldConcats = !!omitAdditionalFields

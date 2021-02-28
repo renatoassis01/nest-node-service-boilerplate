@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import {
   IsString,
   IsEnum,
@@ -8,11 +8,13 @@ import {
   IsOptional,
   IsUUID,
   IsBoolean,
-  IsDate,
 } from 'class-validator';
-import { OperatorQueryEnum as OpqEnum } from '../../../enums/operatorquery.enum';
+import { AuditFieldsEnum } from '../../../enums/auditfields.enum';
+import { DateFormatEnum } from '../../../enums/dateformat.enum';
+import { OperatorQueryEnum } from '../../../enums/operatorquery.enum';
 import { PatternQueryEnum } from '../../../enums/patternquery.enum';
 import { SortOrderEnum } from '../../../enums/sortorder.enum';
+import { DateUtils } from '../../../utils/date.utils';
 import { TransformUtils } from '../../../utils/transform.utils';
 import { IsInteger } from '../../../utils/validators/isinterger.validator';
 import { IBaseFilter } from '../../interfaces/base.filter.dto';
@@ -63,35 +65,48 @@ export class BaseGetAllRequestDTO implements IBaseFilter {
   userId?: string;
 
   @ApiPropertyOptional({
-    description: 'Record creation date',
-    type: String,
+    description: 'Record field audit date',
+    enum: AuditFieldsEnum,
   })
-  @IsDate()
-  @IsOptional()
-  createAt?: Date;
+  @ValidateIf((prop) => !!prop.startDateAudit || !!prop.endDateAudit)
+  @IsNotEmpty()
+  @IsEnum(AuditFieldsEnum, {
+    message: `fieldAudit must be createdAt or updatedAt or deletedAt`,
+  })
+  fieldAudit?: AuditFieldsEnum;
 
   @ApiPropertyOptional({
-    description: 'Record update date',
-    type: String,
+    description: 'Record audit date start',
+    type: Date,
   })
-  @IsDate()
-  @IsOptional()
-  updatedAt?: Date;
+  @Transform(({ value }) =>
+    DateUtils.formatDate(value, DateFormatEnum.YYYY_MM_DD),
+  )
+  @ValidateIf((prop) => !!prop.fieldAudit || !!prop.endDateAudit)
+  @IsNotEmpty()
+  startDateAudit?: string;
 
   @ApiPropertyOptional({
-    description: 'Record delete date',
-    type: String,
+    description: 'Record audit date start',
+    type: Date,
   })
-  @IsDate()
-  @IsOptional()
-  deletedAt?: Date;
+  @Transform(({ value }) =>
+    DateUtils.formatDate(value, DateFormatEnum.YYYY_MM_DD),
+  )
+  @ValidateIf((prop) => !!prop.fieldAudit || !!prop.startDateAudit)
+  @IsNotEmpty()
+  endDateAudit?: string;
 
   @ApiPropertyOptional({
     description: 'Records deleteds',
     type: Boolean,
   })
   @Transform((obj) => TransformUtils.ToBoolean(obj))
-  @IsOptional()
+  @ValidateIf(
+    (prop) =>
+      !!prop.fieldAudit && prop.fieldAudit === AuditFieldsEnum.DELETED_AT,
+  )
+  @IsNotEmpty({ message: 'must be true if fieldAudit equal deleteAt' })
   @IsBoolean()
   withDeleted?: boolean;
 
@@ -115,14 +130,14 @@ export class BaseGetAllRequestDTO implements IBaseFilter {
 
   @ApiPropertyOptional({
     description: 'Correspondence operator',
-    enum: OpqEnum,
+    enum: OperatorQueryEnum,
   })
-  @IsEnum(OpqEnum, {
-    message: `must be ${OpqEnum.LIKE} or ${OpqEnum.ILIKE} or ${OpqEnum.NOT_LIKE} or ${OpqEnum.NOT_ILIKE}`,
+  @IsEnum(OperatorQueryEnum, {
+    message: `must be LIKE or ILIKE or NOT_LIKE or NOT_ILIKE`,
   })
   @ValidateIf((prop) => !!prop.fieldMatching)
   @IsNotEmpty()
-  operatorMatching: OpqEnum;
+  operatorMatching: OperatorQueryEnum;
 
   @ApiPropertyOptional({
     description: 'Pattern Matching value',
@@ -141,7 +156,7 @@ export class BaseGetAllRequestDTO implements IBaseFilter {
     enum: PatternQueryEnum,
   })
   @IsEnum(PatternQueryEnum, {
-    message: `must be ${PatternQueryEnum.START_WITH} or ${PatternQueryEnum.END_WITH} or ${PatternQueryEnum.IN_BETWEEN}`,
+    message: `must be START_WITH or END_WITH or IN_BETWEEN`,
   })
   @ValidateIf((prop) => !!prop.valueMatching)
   @IsNotEmpty()
