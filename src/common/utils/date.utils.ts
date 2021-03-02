@@ -23,10 +23,9 @@ export class DateUtils {
     unit: moment.unitOfTime.DurationConstructor,
     outputFormat: DateFormatEnum,
   ): string {
-    return moment(date, outputFormat, true)
+    return moment(new Date(date), outputFormat, true)
       .subtract(amount, unit)
-      .format(outputFormat)
-      .toString();
+      .format(outputFormat);
   }
 
   public static addDateToString(
@@ -35,9 +34,13 @@ export class DateUtils {
     unit: moment.unitOfTime.DurationConstructor,
     outputFormat: DateFormatEnum,
   ): string {
-    return moment(date, outputFormat)
+    const newDate = moment(
+      new Date(date),
+      DateFormatEnum.DD_MM_YYYY_HH_MM,
+      true,
+    )
       .add(amount, unit)
-      .format(outputFormat)
-      .toString();
+      .format(outputFormat);
+    return newDate;
   }
 }
