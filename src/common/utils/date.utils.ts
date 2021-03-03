@@ -35,12 +35,10 @@ export class DateUtils {
     outputFormat: DateFormatEnum,
   ): string {
     const newDate = moment(
-      new Date(date),
-      DateFormatEnum.DD_MM_YYYY_HH_MM,
-      true,
-    )
-      .add(amount, unit)
-      .format(outputFormat);
-    return newDate;
+      moment(new Date(date), DateFormatEnum.DD_MM_YYYY_HH_MM, true)
+        .add(amount, unit)
+        .format(outputFormat),
+    );
+    return newDate.toString();
   }
 }

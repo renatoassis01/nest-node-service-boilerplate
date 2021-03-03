@@ -4,10 +4,8 @@ import { DEFAULT_FIELDNAME_ORDER_BY } from '../constants/constants';
 import * as _ from 'lodash';
 import { IBasePatternDTO } from '../base/interfaces/base.pattern.dto';
 import { PatternMatchingUtils } from './patternmatching.utils';
-import { Between, FindOperator, Raw } from 'typeorm';
+import { FindOperator, Raw } from 'typeorm';
 import { IBaseAuditFilter } from '../base/interfaces/base.audit.filter';
-import { DateUtils } from './date.utils';
-import { DateFormatEnum } from '../enums/dateformat.enum';
 
 export class QueryUtils {
   public static buildOrderBy(
@@ -110,17 +108,11 @@ export class QueryUtils {
     const { startDateAudit, endDateAudit, fieldAudit } = fieldsModel;
     let condidtion: any;
     if (['createdAt', 'updatedAt', 'deletedAt'].includes(fieldAudit)) {
-      const endDate = DateUtils.addDateToString(
-        endDateAudit,
-        1,
-        'day',
-        DateFormatEnum.YYYY_MM_DD,
-      );
       condidtion = {
         [fieldAudit]: Raw(
           (alias) =>
             `CAST(${alias} as date) >= '${startDateAudit}'::date
-              AND CAST(${alias} as date) < '${endDate}'::date`,
+              AND CAST(${alias} as date) < 'CAST(${endDateAudit}'::date + interval 1 'day' as date)`,
         ),
       };
     }

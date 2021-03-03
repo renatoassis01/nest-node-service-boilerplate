@@ -125,7 +125,7 @@ describe('Suite teste QueryUtils', () => {
       };
 
       const expectFilter = `CAST(createdAt as date) >= '2021-03-02'::date
-      AND CAST(createdAt as date) < '2021-03-03'::date`;
+      AND CAST(createdAt as date) < CAST('2021-03-02'::date + interval 1 'day' as date)`;
 
       const result = QueryUtils.buildWhereAuditFields(data);
       expect(expectFilter).toBe(
