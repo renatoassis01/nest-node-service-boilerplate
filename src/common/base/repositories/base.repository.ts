@@ -54,6 +54,7 @@ export class BaseRepository<T extends BaseModel>
     const sortParam = filters?.sortParam;
     const withDeleted = filters?.withDeleted || false;
     const fieldsModel = QueryUtils.excludeFieldsFilter(filters);
+    //const fieldsModel = this.repository.create(filters);
     const whereCondition = QueryUtils.buildWhere(tenantId, fieldsModel);
     const whereConditionWithAudit = QueryUtils.buildWhereAuditFields(filters);
     const patternMatchingConditon = QueryUtils.buildWherePatternMatching(
@@ -125,6 +126,7 @@ export class BaseRepository<T extends BaseModel>
       .set(updateValues)
       .where({ id, tenantId })
       .execute();
+
     return result.affected > 0;
   }
 }

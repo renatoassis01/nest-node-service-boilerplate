@@ -1,14 +1,14 @@
-import { EnvironmentConfig } from '../enviroment.config';
-
 import * as chalk from 'chalk';
 import { EnvironmentEnum } from '../../common/enums/enviroment.enum';
+import { EnvironmentConfig } from '../../config/enviroment.config';
 
 const PORT = EnvironmentConfig.getServicePort();
 export class InfoUtils {
   public static banner(apiPath: string): void {
     const display = chalk.cyanBright(`
-       █░█ ▀█▀ ▄▀█ ▀▄▀   ▀█▀ █▀▀ ▄▀█ █▀▄▀█
-       ▀▀█ ░█░ █▀█ █░█   ░█░ ██▄ █▀█ █░▀░█
+      
+    █▀█ █▀█ █▄▄ █ ▀█▀   ▀█▀ █▀▀ ▄▀█ █▀▄▀█ █▀
+    █▄█ █▀▄ █▄█ █ ░█░   ░█░ ██▄ █▀█ █░▀░█ ▄█
        
        `);
 
@@ -32,7 +32,7 @@ export class InfoUtils {
       console.log(
         `Starting development server at: ${chalk.green(
           `http://localhost:${PORT}`,
-        )}`,
+        )} \n`,
       );
     }
   }

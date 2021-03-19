@@ -134,4 +134,15 @@ describe('Suite tests DateUtils', () => {
       expect(format).toEqual('2021-03-15');
     });
   });
+  describe('xxxxxxx', () => {
+    it('xxxxx', () => {
+      const d = DateUtils.addDayToString(
+        '2020-02-01',
+        1,
+        'day',
+        DateFormatEnum.YYYY_MM_DD,
+      );
+      expect(d).toEqual('2020-02-02');
+    });
+  });
 });

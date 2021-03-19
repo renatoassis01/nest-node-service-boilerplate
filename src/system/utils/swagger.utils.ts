@@ -4,9 +4,10 @@ import {
   SwaggerCustomOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
+import { ISwaggerconfig } from '../interfaces/swagger.config';
 
 const swaggerCustom: SwaggerCustomOptions = {
-  customSiteTitle: '4Tax - API',
+  customSiteTitle: 'Orbit - API',
   customfavIcon:
     'https://solucoesdefinitivas.com.br/site/wp-content/uploads/2017/02/icone-iphone.png',
   customCss: `
@@ -15,17 +16,14 @@ const swaggerCustom: SwaggerCustomOptions = {
 };
 
 export class SwaggerUtils {
-  public static setupSwaggerModule(
-    app: INestApplication,
-    apiPath: string,
-  ): void {
-    const config = new DocumentBuilder()
-      .setTitle('Template Service')
-      .setDescription('Template Service')
-      .setVersion('1.0')
-      .addTag('book')
+  public static setupSwaggerModule(config: ISwaggerconfig): void {
+    const setup = new DocumentBuilder()
+      .setTitle(config.title)
+      .setDescription(config.description)
+      .setVersion(config.version)
+      .addTag(config.tag.name, config.tag.description, config.tag.externalDocs)
       .build();
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup(apiPath, app, document, swaggerCustom);
+    const document = SwaggerModule.createDocument(config.app, setup);
+    SwaggerModule.setup(config.apiPath, config.app, document, swaggerCustom);
   }
 }

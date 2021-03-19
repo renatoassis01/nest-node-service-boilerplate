@@ -19,10 +19,7 @@ export class QueryUtils {
     return { [sortOptions.sortParam]: sortOptions.sortOrder };
   }
 
-  public static buildWhere(
-    tenantId: string,
-    fieldsModel: Record<string, unknown>,
-  ) {
+  public static buildWhere<T>(tenantId: string, fieldsModel: T) {
     return !!fieldsModel ? { tenantId, ...fieldsModel } : { tenantId };
   }
 
