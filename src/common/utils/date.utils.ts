@@ -1,5 +1,4 @@
 import * as moment from 'moment';
-import * as tz from 'moment-timezone';
 import { DateFormatEnum } from '../enums/dateformat.enum';
 
 export class DateUtils {
@@ -35,35 +34,17 @@ export class DateUtils {
     unit: moment.unitOfTime.DurationConstructor,
     outputFormat: DateFormatEnum,
   ): string {
-    const newDate = moment(
-      moment(new Date(date), DateFormatEnum.DD_MM_YYYY_HH_MM, true)
-        .add(amount, unit)
-        .format(outputFormat),
-    );
-    return newDate.toString();
+    return moment(new Date(date), outputFormat, true)
+      .add(amount, unit)
+      .format(outputFormat);
   }
 
-  public static addDayToString(
+  public static addOneDayToString(
     date: string,
-    amount: number,
-    unit: 'day' | 'days',
-    outputFormat: DateFormatEnum,
+    outputFormat = DateFormatEnum.YYYY_MM_DD,
   ): string {
-    // seconds * minutes * hours * milliseconds = 1 day
-    const day = amount * (60 * 60 * 24 * 1000);
-    const unixTimestamp = new Date(date).getTime() + day;
-    return tz(unixTimestamp, 'UTC', true).startOf('day').format(outputFormat);
-  }
-
-  public static addDayWithTzToString(
-    date: string,
-    amount: number,
-    unit: 'day' | 'days',
-    timezone: string,
-    outputFormat: DateFormatEnum,
-  ): string {
-    const newDate = tz(new Date(date), timezone, true);
-
-    return newDate.add(amount, unit).format(outputFormat);
+    const dayInMillesecond = 1000 * 60 * 60 * 24;
+    const aux = moment(new Date(date).getTime() + dayInMillesecond).toDate();
+    return moment(aux).add(1, 'day').startOf('day').format(outputFormat);
   }
 }

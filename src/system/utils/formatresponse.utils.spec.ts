@@ -1,7 +1,7 @@
-import { IGetAllResult } from '../../common/interfaces/getallresult';
+import { IGetByFiltersResult } from '../../common/interfaces/getbyfiltersresult';
 import { FormatReponseUtils } from './formatresponse.utils';
 
-const data: IGetAllResult = {
+const data: IGetByFiltersResult = {
   count: 1,
   page: 1,
   limit: 20,
@@ -31,7 +31,11 @@ describe('Suite test for Format', () => {
     expect(result).toEqual(resultExpect);
   });
 
-  it('format response empty object ', () => {
+  it('format response empty object CASE 1', () => {
+    const result = FormatReponseUtils.format();
+    expect(result).toBeUndefined();
+  });
+  it('format response empty object CASE 2', () => {
     const result = FormatReponseUtils.format({});
     expect(result).toEqual({ data: {} });
   });

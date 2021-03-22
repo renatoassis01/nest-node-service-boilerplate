@@ -1,5 +1,5 @@
 import * as chalk from 'chalk';
-import { EnvironmentEnum } from '../../common/enums/enviroment.enum';
+import { EnvironmentEnum } from '../enums/enviroment.enum';
 import { EnvironmentConfig } from '../../config/enviroment.config';
 
 const PORT = EnvironmentConfig.getServicePort();

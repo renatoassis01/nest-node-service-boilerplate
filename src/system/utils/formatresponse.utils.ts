@@ -1,7 +1,8 @@
 import { DataResponse } from '../interfaces/data.response';
 
 export class FormatReponseUtils {
-  public static format<T>(data: any): DataResponse<T> {
+  public static format<T>(data?: any): DataResponse<T> {
+    if (!data) return;
     if (
       Object.keys(data).includes('count') &&
       Object.keys(data).includes('limit') &&

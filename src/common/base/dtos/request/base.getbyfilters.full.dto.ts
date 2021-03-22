@@ -19,7 +19,7 @@ import { TransformUtils } from '../../../utils/transform.utils';
 import { IsInteger } from '../../../utils/validators/isinterger.validator';
 import { IBaseFilter } from '../../interfaces/base.filter.dto';
 
-export class BaseGetAllRequestDTO implements IBaseFilter {
+export class BaseGetByFiltersFullRequestDTO implements IBaseFilter {
   @ApiPropertyOptional({
     description: 'Records page',
     type: Number,

@@ -5,9 +5,11 @@ import * as _ from 'lodash';
 import { IBasePatternDTO } from '../base/interfaces/base.pattern.dto';
 import { PatternMatchingUtils } from './patternmatching.utils';
 import { FindOperator, Raw } from 'typeorm';
-import { IBaseAuditFilter } from '../base/interfaces/base.audit.filter';
+import { IBaseAuditFilterDTO } from '../base/interfaces/base.audit.filter.dto';
+import { AuditFieldsEnum } from '../enums/auditfields.enum';
+import { DateUtils } from './date.utils';
 
-export class QueryUtils {
+export class FilterUtils {
   public static buildOrderBy(
     sortOptions: IBaseOrderByDTO,
   ): { [fieldName: string]: SortOrderEnum } {
@@ -30,7 +32,7 @@ export class QueryUtils {
    * @param omitAdditionalFields
    */
   public static excludeFieldsFilter(
-    filters: Record<string, unknown>,
+    filters: Record<symbol, unknown>,
     omitAdditionalFields?: string[],
   ): Pick<Record<string, unknown>, never> {
     const filterFields = [
@@ -94,7 +96,7 @@ export class QueryUtils {
    * @param fieldsModel
    */
   public static buildWhereAuditFields(
-    fieldsModel: IBaseAuditFilter,
+    fieldsModel: IBaseAuditFilterDTO,
   ): { [field: string]: FindOperator<any> } | undefined {
     if (
       _.isEmpty(fieldsModel?.startDateAudit) ||
@@ -104,12 +106,19 @@ export class QueryUtils {
       return;
     const { startDateAudit, endDateAudit, fieldAudit } = fieldsModel;
     let condidtion: any;
-    if (['createdAt', 'updatedAt', 'deletedAt'].includes(fieldAudit)) {
+    if (
+      [
+        AuditFieldsEnum.CREATED_AT,
+        AuditFieldsEnum.UPDATED_AT,
+        AuditFieldsEnum.DELETED_AT,
+      ].includes(fieldAudit)
+    ) {
+      const endDatePlusOne = DateUtils.addOneDayToString(endDateAudit);
       condidtion = {
         [fieldAudit]: Raw(
           (alias) =>
             `CAST(${alias} as date) >= '${startDateAudit}'::date
-              AND CAST(${alias} as date) < 'CAST(${endDateAudit}'::date + interval 1 'day' as date)`,
+              AND CAST(${alias} as date) < '${endDatePlusOne}'::date)`,
         ),
       };
     }

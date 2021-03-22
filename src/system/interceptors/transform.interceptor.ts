@@ -18,6 +18,10 @@ export class TransformInterceptor<T>
   ): Observable<DataResponse<T>> {
     return next
       .handle()
-      .pipe(map((data) => FormatReponseUtils.format<T>(data)));
+      .pipe(
+        map((data) =>
+          !!data ? FormatReponseUtils.format<T>(data) : undefined,
+        ),
+      );
   }
 }

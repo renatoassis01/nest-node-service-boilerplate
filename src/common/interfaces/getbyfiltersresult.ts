@@ -1,4 +1,4 @@
-export interface IGetAllResult {
+export interface IGetByFiltersResult {
   count: number;
   limit: number;
   page: number;

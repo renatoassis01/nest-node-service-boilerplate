@@ -1,6 +1,6 @@
 import { Validator } from 'class-validator';
 import { BookModelBuilder } from '../../utils/builders/book.model.builder';
-import { CreateBookRequestDTO } from './create.book.dto';
+import { StoreBookRequestDTO } from './store.book.dto';
 const validator = new Validator();
 const book = new BookModelBuilder()
   .withId()
@@ -16,7 +16,7 @@ const book = new BookModelBuilder()
 
 describe('Suite tests CreateBookRequestDTO', () => {
   it('should true dto whitout errors', () => {
-    const createBookDTO = new CreateBookRequestDTO();
+    const createBookDTO = new StoreBookRequestDTO();
     createBookDTO.name = book.name;
     createBookDTO.author = book.author;
     createBookDTO.isbn = book.isbn;
@@ -25,7 +25,7 @@ describe('Suite tests CreateBookRequestDTO', () => {
     });
   });
   it('should true dto whith errors', () => {
-    const createBookDTO = new CreateBookRequestDTO();
+    const createBookDTO = new StoreBookRequestDTO();
     createBookDTO.name = book.name;
     createBookDTO.isbn = book.isbn;
     return validator.validate(createBookDTO).then((errors) => {

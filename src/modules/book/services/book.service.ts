@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookRepository } from '../repositories/book.repository';
-import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
-import { GetAllBookRequestDTO } from '../dtos/request/getall.book.dto';
+import { StoreBookRequestDTO } from '../dtos/request/store.book.dto';
+import { GetByFiltersBookRequestDTO } from '../dtos/request/getbyfilters.book.dto';
 import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
-import { IGetAllResult } from '../../../common/interfaces/getallresult';
+import { IGetByFiltersResult } from '../../../common/interfaces/getbyfiltersresult';
 import { BookModel } from '../models/book.model';
 @Injectable()
 export class BookService {
@@ -13,20 +13,20 @@ export class BookService {
     private readonly repository: BookRepository,
   ) {}
 
-  public async create(
+  public async store(
     tenantId: string,
     userId: string,
-    data: CreateBookRequestDTO,
+    data: StoreBookRequestDTO,
   ): Promise<BookModel> {
-    const book = await this.repository.create(tenantId, userId, data);
+    const book = await this.repository.store(tenantId, userId, data);
     return book;
   }
 
-  public async getAll(
+  public async getByFilters(
     tenantId: string,
-    filters: GetAllBookRequestDTO,
-  ): Promise<IGetAllResult> {
-    return await this.repository.getAll(tenantId, filters);
+    filters: GetByFiltersBookRequestDTO,
+  ): Promise<IGetByFiltersResult> {
+    return await this.repository.getByFilters(tenantId, filters);
   }
 
   public async getById(tenantId: string, id: string): Promise<BookModel> {
@@ -46,23 +46,34 @@ export class BookService {
     return result;
   }
 
-  public async deleteById(tenantId: string, id: string): Promise<string> {
+  public async deleteById(tenantId: string, id: string): Promise<void> {
     const isBookDeleted = await this.repository.deleteById(tenantId, id);
     if (!isBookDeleted) throw new NotFoundException('Book not found');
-    return 'Book deleted';
   }
 
-  public async removeById(
+  public async disableById(
     tenantId: string,
-    id: string,
     userId: string,
-  ): Promise<string> {
-    const isBookDeleted = await this.repository.removeById(
+    id: string,
+  ): Promise<void> {
+    const isBookDeleted = await this.repository.disableById(
       tenantId,
-      id,
       userId,
+      id,
     );
     if (!isBookDeleted) throw new NotFoundException('Book not found');
-    return 'Book deleted';
+  }
+
+  public async enableById(
+    tenantId: string,
+    userId: string,
+    id: string,
+  ): Promise<void> {
+    const isBookEnabled = await this.repository.enableById(
+      tenantId,
+      userId,
+      id,
+    );
+    if (!isBookEnabled) throw new NotFoundException('Book not found');
   }
 }

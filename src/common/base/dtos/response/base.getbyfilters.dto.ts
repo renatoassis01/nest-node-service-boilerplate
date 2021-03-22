@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IGetAllResult } from '../../../interfaces/getallresult';
+import { IGetByFiltersResult } from '../../../interfaces/getbyfiltersresult';
 
-export class BaseGetAllResponseDTO implements IGetAllResult {
+export class BaseGetByFiltersResponseDTO implements IGetByFiltersResult {
   @ApiProperty({
     description: 'Total records stored',
   })

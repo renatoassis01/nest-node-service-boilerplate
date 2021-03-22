@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { BookService } from '../services/book.service';
 import { BookModelBuilder } from '../utils/builders/book.model.builder';
 import { BookController } from './book.controller';
-import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
+import { StoreBookRequestDTO } from '../dtos/request/store.book.dto';
 import { BookRepository } from '../repositories/book.repository';
 import { BookResponseDTO } from '../dtos/response/book.dto';
 import { getCustomRepositoryToken } from '@nestjs/typeorm';
@@ -35,7 +35,7 @@ const book2 = new BookModelBuilder()
   .withAuthor('Machado de Assis')
   .build();
 
-const createBookDTO = new CreateBookRequestDTO();
+const createBookDTO = new StoreBookRequestDTO();
 createBookDTO.name = book.name;
 createBookDTO.author = book.author;
 createBookDTO.isbn = book.isbn;
@@ -88,39 +88,39 @@ describe('Suite tests Book', () => {
 
   describe('POST /books', () => {
     it('should return an book', async () => {
-      const createBookDTO = new CreateBookRequestDTO();
-      createBookDTO.name = book.name;
-      createBookDTO.author = book.author;
-      createBookDTO.isbn = book.isbn;
+      const storeBookDTO = new StoreBookRequestDTO();
+      storeBookDTO.name = book.name;
+      storeBookDTO.author = book.author;
+      storeBookDTO.isbn = book.isbn;
 
       jest
-        .spyOn(bookRepository, 'create')
+        .spyOn(bookRepository, 'store')
         .mockResolvedValue(new Promise((resolve) => resolve(book)));
 
-      const servicepy = jest.spyOn(bookService, 'create');
+      const servicepy = jest.spyOn(bookService, 'store');
 
-      const result = await bookController.create(
+      const result = await bookController.store(
         book.tenantId,
         book.userId,
-        createBookDTO,
+        storeBookDTO,
       );
 
       expect(result).toEqual(new BookResponseDTO(book));
       expect(servicepy).toBeCalledWith(
         book.tenantId,
         book.userId,
-        createBookDTO,
+        storeBookDTO,
       );
     });
     it('An example tests supertest [POST /books]', async () => {
-      const createBookDTO = new CreateBookRequestDTO();
+      const createBookDTO = new StoreBookRequestDTO();
       createBookDTO.name = book.name;
       createBookDTO.author = book.author;
       createBookDTO.isbn = book.isbn;
 
-      const servicepy = jest.spyOn(bookService, 'create');
+      const servicepy = jest.spyOn(bookService, 'store');
 
-      bookRepository.create = jest
+      bookRepository.store = jest
         .fn()
         .mockResolvedValue(new Promise((resolve) => resolve(book)));
 
@@ -141,7 +141,7 @@ describe('Suite tests Book', () => {
         bookRepository.getById = jest
           .fn()
           .mockResolvedValue(new Promise((resolve) => resolve(undefined)));
-        await bookController.getById(book.tenantId, book.id);
+        await bookController.get(book.tenantId, book.id);
         expect(servicepy).toBeCalled();
       }).rejects.toThrow('Book not found');
     });
@@ -237,7 +237,7 @@ describe('Suite tests Book', () => {
         bookRepository.deleteById = jest
           .fn()
           .mockResolvedValue(new Promise((resolve) => resolve(false)));
-        await bookController.deleteById(book.tenantId, book.id);
+        await bookController.delete(book.tenantId, book.id);
         expect(servicepy).toBeCalled();
       }).rejects.toThrow('Book not found');
     });

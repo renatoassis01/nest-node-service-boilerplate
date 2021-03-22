@@ -1,8 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
-import { BaseGetAllRequestDTO } from '../../../../common/base/dtos/request/base.getall.dto';
+import { BaseGetByFiltersFullRequestDTO } from '../../../../common/base/dtos/request/base.getbyfilters.full.dto';
 
-export class GetAllBookRequestDTO extends BaseGetAllRequestDTO {
+export class GetByFiltersBookRequestDTO extends BaseGetByFiltersFullRequestDTO {
   @ApiPropertyOptional({
     description: 'name book',
   })

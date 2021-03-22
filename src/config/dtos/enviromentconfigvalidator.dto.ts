@@ -1,8 +1,8 @@
 import { plainToClass } from 'class-transformer';
 import { IsEnum, IsNumber, IsString, validateSync } from 'class-validator';
-import { EnvironmentEnum } from '../../common/enums/enviroment.enum';
+import { EnvironmentEnum } from '../../system/enums/enviroment.enum';
 
-class EnviromentConfigValidatorDTO {
+export class EnviromentConfigValidatorDTO {
   @IsEnum(EnvironmentEnum)
   CURRENT_ENVIRONMENT: EnvironmentEnum;
 

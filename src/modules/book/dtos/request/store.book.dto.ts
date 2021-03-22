@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
-export class CreateBookRequestDTO {
+export class StoreBookRequestDTO {
   @ApiProperty({
     description: 'The name of book',
   })

@@ -1,14 +1,14 @@
 import { IBaseOrderByDTO } from '../base/interfaces/base.orderby.dto';
 import { SortOrderEnum } from '../enums/sortorder.enum';
 import { DEFAULT_FIELDNAME_ORDER_BY } from '../constants/constants';
-import { QueryUtils } from './query.utils';
+import { FilterUtils } from './filter.utils';
 import { IBaseFilter } from '../base/interfaces/base.filter.dto';
 import { FakerUtils } from './faker.utils';
 import { OperatorQueryEnum } from '../enums/operatorquery.enum';
 import { PatternQueryEnum } from '../enums/patternquery.enum';
 import { AuditFieldsEnum } from '../enums/auditfields.enum';
 import { IBasePatternDTO } from '../base/interfaces/base.pattern.dto';
-import { IBaseAuditFilter } from '../base/interfaces/base.audit.filter';
+import { IBaseAuditFilterDTO } from '../base/interfaces/base.audit.filter.dto';
 
 describe('Suite teste QueryUtils', () => {
   describe('Tests function buildOrderBy', () => {
@@ -20,7 +20,7 @@ describe('Suite teste QueryUtils', () => {
         sortParam: 'fieldname',
         sortOrder: SortOrderEnum.ASC,
       };
-      const order = QueryUtils.buildOrderBy(builder);
+      const order = FilterUtils.buildOrderBy(builder);
       expect(order).toEqual(sort);
     });
     it('must be true if the parameters are null (default order)', () => {
@@ -31,7 +31,7 @@ describe('Suite teste QueryUtils', () => {
         sortParam: undefined,
         sortOrder: undefined,
       };
-      const order = QueryUtils.buildOrderBy(builder);
+      const order = FilterUtils.buildOrderBy(builder);
       expect(order).toEqual(sort);
     });
   });
@@ -59,7 +59,7 @@ describe('Suite teste QueryUtils', () => {
         age: 33,
       };
 
-      const result = QueryUtils.excludeFieldsFilter({ ...filter, ...data });
+      const result = FilterUtils.excludeFieldsFilter({ ...filter, ...data });
       expect(result).not.toContain('page');
       expect(result).not.toContain('size');
       expect(result).not.toContain('sortOrder');
@@ -81,7 +81,7 @@ describe('Suite teste QueryUtils', () => {
         age: 33,
         additionalField: FakerUtils.faker().random.word(),
       };
-      const result = QueryUtils.excludeFieldsFilter({ ...filter, ...data }, [
+      const result = FilterUtils.excludeFieldsFilter({ ...filter, ...data }, [
         'additionalField',
       ]);
       expect(result).not.toContain('additionalField');
@@ -91,7 +91,7 @@ describe('Suite teste QueryUtils', () => {
   describe('Tests function buildWherePatternMatching', () => {
     it('should be return null', () => {
       const data: IBasePatternDTO = {};
-      const result = QueryUtils.buildWherePatternMatching(data);
+      const result = FilterUtils.buildWherePatternMatching(data);
       expect(result).toBeUndefined();
     });
     it('should be return a pattern', () => {
@@ -105,7 +105,7 @@ describe('Suite teste QueryUtils', () => {
       const expectPattern = `${[data.fieldMatching]} ${
         data.operatorMatching
       } '%${valueMatching}'`;
-      const result = QueryUtils.buildWherePatternMatching(data);
+      const result = FilterUtils.buildWherePatternMatching(data);
       expect(expectPattern).toBe(
         result[data.fieldMatching].getSql(data.fieldMatching),
       );
@@ -113,23 +113,20 @@ describe('Suite teste QueryUtils', () => {
   });
   describe('Tests function buildWhereAuditFields', () => {
     it('should be return null', () => {
-      const data: IBaseAuditFilter = {};
-      const result = QueryUtils.buildWhereAuditFields(data);
+      const data: IBaseAuditFilterDTO = {};
+      const result = FilterUtils.buildWhereAuditFields(data);
       expect(result).toBeUndefined();
     });
     it('should be return a audit filter date', () => {
-      const data: IBaseAuditFilter = {
+      const data: IBaseAuditFilterDTO = {
         fieldAudit: AuditFieldsEnum.CREATED_AT,
         startDateAudit: '2021-03-02',
         endDateAudit: '2021-03-02',
       };
 
-      const expectFilter = `CAST(createdAt as date) >= '2021-03-02'::date
-      AND CAST(createdAt as date) < CAST('2021-03-02'::date + interval 1 'day' as date)`;
-
-      const result = QueryUtils.buildWhereAuditFields(data);
-      expect(expectFilter).toBe(
-        result.createdAt.getSql(AuditFieldsEnum.CREATED_AT),
+      const result = FilterUtils.buildWhereAuditFields(data);
+      expect(result.createdAt.getSql(AuditFieldsEnum.CREATED_AT)).toContain(
+        "'2021-03-03'::date",
       );
     });
   });

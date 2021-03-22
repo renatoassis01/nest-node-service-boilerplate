@@ -1,5 +1,5 @@
-import { IGetAllResult } from '../../common/interfaces/getallresult';
+import { IGetByFiltersResult } from '../../common/interfaces/getbyfiltersresult';
 
 export type DataResponse<T> = Partial<
-  Pick<IGetAllResult, 'count' | 'limit' | 'page' | 'totalPages'>
+  Pick<IGetByFiltersResult, 'count' | 'limit' | 'page' | 'totalPages'>
 > & { data: T };

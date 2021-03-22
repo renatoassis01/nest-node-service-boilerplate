@@ -35,7 +35,7 @@ async function createManyTodos(
   const todos = [];
   const userId = FakerUtils.faker().random.uuid();
   for (let index = 1; index < totalTodos + 1; index++) {
-    const created = await todoRepository.create(tenantId, userId, {
+    const created = await todoRepository.store(tenantId, userId, {
       name: `todo ${index}`,
       done: false,
     });
@@ -69,7 +69,7 @@ describe('Suite test BaseRepository', () => {
 
   describe('Suite tests [create]', () => {
     it('should be create a entity', async () => {
-      const result = await todoRepository.create(
+      const result = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
         todo1DTO,
@@ -82,7 +82,7 @@ describe('Suite test BaseRepository', () => {
 
   describe('Suite tests [getById]', () => {
     it('should be return a entity', async () => {
-      const created = await todoRepository.create(
+      const created = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
         todo1DTO,
@@ -91,7 +91,7 @@ describe('Suite test BaseRepository', () => {
       expect(todo.id).toEqual(created.id);
     });
     it('entity not found', async () => {
-      const created = await todoRepository.create(
+      const created = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
         todo1DTO,
@@ -107,7 +107,7 @@ describe('Suite test BaseRepository', () => {
   describe('Suite tests [updateById]', () => {
     it('should be updated a entity', async () => {
       const otherUserId = FakerUtils.faker().random.uuid();
-      const created = await todoRepository.create(
+      const created = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
         todo1DTO,
@@ -134,12 +134,12 @@ describe('Suite test BaseRepository', () => {
   });
   describe('Suite test [removeById]', () => {
     it('must return true entities removed', async () => {
-      const result = await todoRepository.create(
+      const result = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
         todo1DTO,
       );
-      await todoRepository.removeById(
+      await todoRepository.disableById(
         result.tenantId,
         result.id,
         result.userId,
@@ -148,12 +148,12 @@ describe('Suite test BaseRepository', () => {
       expect(data).toBeUndefined();
     });
     it('must return false entities not removed', async () => {
-      const result = await todoRepository.create(
+      const result = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
         todo1DTO,
       );
-      const isDeleted = await todoRepository.removeById(
+      const isDeleted = await todoRepository.disableById(
         result.tenantId,
         FakerUtils.faker().random.uuid(),
         result.userId,
@@ -164,7 +164,7 @@ describe('Suite test BaseRepository', () => {
 
   describe('Suite test [deleteById]', () => {
     it('must return true entities deleteds', async () => {
-      const result = await todoRepository.create(
+      const result = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
         todo1DTO,
@@ -174,7 +174,7 @@ describe('Suite test BaseRepository', () => {
       expect(data).toBeUndefined();
     });
     it('must return false entities not deleteds', async () => {
-      const result = await todoRepository.create(
+      const result = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
         todo1DTO,
@@ -192,7 +192,7 @@ describe('Suite test BaseRepository', () => {
       const totalTodos = 6;
       const tenantId = FakerUtils.faker().random.uuid();
       await createManyTodos(todoRepository, tenantId, totalTodos);
-      const result = await todoRepository.getAll(tenantId, {
+      const result = await todoRepository.getByFilters(tenantId, {
         page: 1,
         size: totalTodos / 2,
       });
@@ -206,7 +206,7 @@ describe('Suite test BaseRepository', () => {
       const totalTodos = 3;
       const tenantId = FakerUtils.faker().random.uuid();
       await createManyTodos(todoRepository, tenantId, totalTodos);
-      const result = await todoRepository.getAll(tenantId);
+      const result = await todoRepository.getByFilters(tenantId);
       expect(result.count).toBe(totalTodos);
       expect(result.limit).toBe(DEFAULT_PAGINATION_SIZE);
       expect(result.totalPages).toBe(1);
@@ -217,7 +217,7 @@ describe('Suite test BaseRepository', () => {
       const tenantId = FakerUtils.faker().random.uuid();
       const todos = await createManyTodos(todoRepository, tenantId, totalTodos);
       const first = todos[0];
-      const result = await todoRepository.getAll(tenantId, {
+      const result = await todoRepository.getByFilters(tenantId, {
         name: first.name,
       });
       expect(result.data[0].name).toBe(first.name);
@@ -227,7 +227,7 @@ describe('Suite test BaseRepository', () => {
       const tenantId = FakerUtils.faker().random.uuid();
       const todos = await createManyTodos(todoRepository, tenantId, totalTodos);
       const last = todos[totalTodos - 1];
-      const result = await todoRepository.getAll(tenantId, {
+      const result = await todoRepository.getByFilters(tenantId, {
         sortOrder: SortOrderEnum.DESC,
         sortParam: 'name',
       });
@@ -239,10 +239,10 @@ describe('Suite test BaseRepository', () => {
       const todos = await createManyTodos(todoRepository, tenantId, totalTodos);
       const todo: TodoModel = todos[2];
 
-      const result = await todoRepository.getAll(tenantId);
+      const result = await todoRepository.getByFilters(tenantId);
 
-      await todoRepository.removeById(tenantId, todo.id, todo.userId);
-      const resultWithDelteds = await todoRepository.getAll(tenantId, {
+      await todoRepository.disableById(tenantId, todo.id, todo.userId);
+      const resultWithDelteds = await todoRepository.getByFilters(tenantId, {
         withDeleted: false,
       });
       expect(result.data.length).toBe(totalTodos);

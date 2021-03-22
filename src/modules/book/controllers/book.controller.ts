@@ -18,12 +18,12 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { CreateBookRequestDTO } from '../dtos/request/create.book.dto';
+import { StoreBookRequestDTO } from '../dtos/request/store.book.dto';
 import { BookService } from '../services/book.service';
 import { BookResponseDTO } from '../dtos/response/book.dto';
 import { TenantId } from '../../../common/decorators/tenantId.decorator';
-import { GetAllBookRequestDTO } from '../dtos/request/getall.book.dto';
-import { GetAllBookResponseDTO } from '../dtos/response/getall.book.dto';
+import { GetByFiltersBookRequestDTO } from '../dtos/request/getbyfilters.book.dto';
+import { GetByFiltersBookResponseDTO } from '../dtos/response/getbyfilters.book.dto';
 import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
 import { UserId } from '../../../common/decorators/userId.decorator';
 
@@ -52,46 +52,47 @@ import { UserId } from '../../../common/decorators/userId.decorator';
 export class BookController {
   constructor(private bookService: BookService) {}
 
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'The records has been successfully return',
+    type: GetByFiltersBookResponseDTO,
+  })
+  async index(
+    @TenantId() tenantId: string,
+    @Query() filters: GetByFiltersBookRequestDTO,
+  ): Promise<GetByFiltersBookResponseDTO> {
+    const result = await this.bookService.getByFilters(tenantId, filters);
+    return new GetByFiltersBookResponseDTO(result);
+  }
+
   @Post()
   @ApiCreatedResponse({
-    description: 'The record has been successfully created',
+    description: 'The record has been successfully stored',
     type: BookResponseDTO,
   })
-  async create(
+  async store(
     @TenantId() tenantId: string,
     @UserId() userId: string,
-    @Body() createBookDTO: CreateBookRequestDTO,
+    @Body() storeBookDTO: StoreBookRequestDTO,
   ): Promise<BookResponseDTO> {
-    const book = await this.bookService.create(tenantId, userId, createBookDTO);
+    const book = await this.bookService.store(tenantId, userId, storeBookDTO);
     return new BookResponseDTO(book);
   }
 
-  @Get('get-by-id/:id')
+  @Get(':id')
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully return',
+    type: BookResponseDTO,
   })
   @ApiResponse({ status: 404, description: 'Book not found' })
-  async getById(
+  async get(
     @TenantId() tenantId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<BookResponseDTO> {
     const result = await this.bookService.getById(tenantId, id);
     return new BookResponseDTO(result);
-  }
-
-  @Get('get-all')
-  @ApiResponse({
-    status: 200,
-    description: 'The records has been successfully return',
-    type: GetAllBookResponseDTO,
-  })
-  async getAll(
-    @TenantId() tenantId: string,
-    @Query() filters: GetAllBookRequestDTO,
-  ): Promise<GetAllBookResponseDTO> {
-    const result = await this.bookService.getAll(tenantId, filters);
-    return new GetAllBookResponseDTO(result);
   }
 
   @Put(':id')
@@ -116,24 +117,38 @@ export class BookController {
     description: 'The record has been successfully deleted',
   })
   @ApiResponse({ status: 404, description: 'Book not found' })
-  async deleteById(
+  async delete(
     @TenantId() tenantId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<string> {
-    return await this.bookService.deleteById(tenantId, id);
+  ): Promise<void> {
+    await this.bookService.deleteById(tenantId, id);
   }
 
-  @Delete('remove-by-id/:id')
+  @Put(':id/disable')
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully removed logical',
   })
   @ApiResponse({ status: 404, description: 'Book not found' })
-  async removeById(
+  async disable(
     @TenantId() tenantId: string,
     @UserId() userId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
-  ): Promise<string> {
-    return await this.bookService.removeById(tenantId, id, userId);
+  ): Promise<void> {
+    await this.bookService.disableById(tenantId, userId, id);
+  }
+
+  @Put(':id/enable')
+  @ApiResponse({
+    status: 200,
+    description: 'The record has been successfully restored logical',
+  })
+  @ApiResponse({ status: 404, description: 'Book not found' })
+  async enable(
+    @TenantId() tenantId: string,
+    @UserId() userId: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<void> {
+    await this.bookService.enableById(tenantId, userId, id);
   }
 }

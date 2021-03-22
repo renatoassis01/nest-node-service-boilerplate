@@ -1,9 +1,10 @@
-import { IGetAllResult } from '../../interfaces/getallresult';
+import { IGetByFiltersResult } from '../../interfaces/getbyfiltersresult';
 import { DeepPartial } from 'typeorm';
 import { BaseModel } from '../models/base.model';
+import { FilterRequestDTO } from '../../types/filter.type.dto';
 
 export interface IBaseRepository<T extends BaseModel> {
-  create(tenantId: string, userId: string, object: DeepPartial<T>): Promise<T>;
+  store(tenantId: string, userId: string, object: DeepPartial<T>): Promise<T>;
   getById(
     tenantId: string,
     id: string,
@@ -11,11 +12,11 @@ export interface IBaseRepository<T extends BaseModel> {
     withDeleted?: boolean,
   ): Promise<T>;
 
-  getAll(
+  getByFilters(
     tenantId: string,
-    filters: any,
+    filters: FilterRequestDTO<T>,
     relations?: string[],
-  ): Promise<IGetAllResult>;
+  ): Promise<IGetByFiltersResult>;
 
   updateById(
     tenantId: string,
@@ -25,5 +26,6 @@ export interface IBaseRepository<T extends BaseModel> {
   ): Promise<T>;
 
   deleteById(tenantId: string, id: string): Promise<boolean>;
-  removeById(tenantId: string, id: string, userId: string): Promise<boolean>;
+  disableById(tenantId: string, userId: string, id: string): Promise<boolean>;
+  enableById(tenantId: string, userId: string, id: string): Promise<boolean>;
 }

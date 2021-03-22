@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { EnvironmentConfig } from './config/enviroment.config';
@@ -7,13 +7,13 @@ import { SwaggerUtils } from './system/utils/swagger.utils';
 import { TransformInterceptor } from './system/interceptors/transform.interceptor';
 import { InfoUtils } from './system/utils/info.utils';
 import { NestExpressApplication } from '@nestjs/platform-express';
-//import { PostgresExecptionFilter } from './system/execeptions/postgresfilter.exeception';
+import { PostgresExceptionsFilter } from './system/exceptions/postgresfilter.exceptions';
 const ROOT_API_PATH = 'api';
 const PORT = EnvironmentConfig.getServicePort();
 
 async function setupNestApplication(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  //app.useGlobalFilters(new PostgresExecptionFilter());
+  //app.useGlobalFilters(new PostgresExceptionsFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
   app.disable('x-powered-by');
   app.useGlobalPipes(

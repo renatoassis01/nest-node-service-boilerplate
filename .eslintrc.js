@@ -34,7 +34,7 @@ module.exports = {
     {
       ignorePatterns: ['**/migrations/*'],
       rules: {
-        '@typescript-eslint/naming-convention': 'off',
+        '@typescript-eslint/naming-convention': 'on',
       },
     },
   ],

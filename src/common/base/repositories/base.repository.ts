@@ -5,16 +5,17 @@ import {
   FindOneOptions,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { IGetAllResult } from '../../interfaces/getallresult';
+import { IGetByFiltersResult } from '../../interfaces/getbyfiltersresult';
+import { FilterRequestDTO } from '../../types/filter.type.dto';
 import { PaginationUtils } from '../../utils/pagination.utils';
-import { QueryUtils } from '../../utils/query.utils';
+import { FilterUtils } from '../../utils/filter.utils';
 import { IBaseRepository } from '../interfaces/base.repository';
 import { BaseModel } from '../models/base.model';
 
 export class BaseRepository<T extends BaseModel>
   extends AbstractRepository<T>
   implements IBaseRepository<T> {
-  public async create(
+  public async store(
     tenantId: string,
     userId: string,
     object: DeepPartial<T>,
@@ -43,21 +44,21 @@ export class BaseRepository<T extends BaseModel>
    * @param filters
    * @param relations
    */
-  public async getAll(
+  public async getByFilters(
     tenantId: string,
-    filters?: any,
+    filters?: FilterRequestDTO<T>,
     relations?: string[],
-  ): Promise<IGetAllResult> {
+  ): Promise<IGetByFiltersResult> {
     const page = filters?.page;
     const size = filters?.size;
     const sortOrder = filters?.sortOrder;
     const sortParam = filters?.sortParam;
     const withDeleted = filters?.withDeleted || false;
-    const fieldsModel = QueryUtils.excludeFieldsFilter(filters);
+    const fieldsModel = FilterUtils.excludeFieldsFilter(filters);
     //const fieldsModel = this.repository.create(filters);
-    const whereCondition = QueryUtils.buildWhere(tenantId, fieldsModel);
-    const whereConditionWithAudit = QueryUtils.buildWhereAuditFields(filters);
-    const patternMatchingConditon = QueryUtils.buildWherePatternMatching(
+    const whereCondition = FilterUtils.buildWhere(tenantId, fieldsModel);
+    const whereConditionWithAudit = FilterUtils.buildWhereAuditFields(filters);
+    const patternMatchingConditon = FilterUtils.buildWherePatternMatching(
       filters,
     );
     const { take, skip } = PaginationUtils.getTakeAndSkip({
@@ -72,7 +73,7 @@ export class BaseRepository<T extends BaseModel>
         ...whereConditionWithAudit,
         ...patternMatchingConditon,
       },
-      order: QueryUtils.buildOrderBy({ sortOrder, sortParam }),
+      order: FilterUtils.buildOrderBy({ sortOrder, sortParam }),
       take,
       skip,
       relations,
@@ -109,12 +110,12 @@ export class BaseRepository<T extends BaseModel>
       .where({ id, tenantId })
       .execute();
 
-    return result.affected > 0;
+    return result?.affected > 0;
   }
-  public async removeById(
+  public async disableById(
     tenantId: string,
-    id: string,
     userId: string,
+    id: string,
   ): Promise<boolean> {
     const updateValues = ({
       deletedAt: new Date(),
@@ -127,6 +128,25 @@ export class BaseRepository<T extends BaseModel>
       .where({ id, tenantId })
       .execute();
 
-    return result.affected > 0;
+    return result?.affected > 0;
+  }
+
+  public async enableById(
+    tenantId: string,
+    userId: string,
+    id: string,
+  ): Promise<boolean> {
+    const updateValues = ({
+      deletedAt: null,
+      userId,
+    } as unknown) as QueryDeepPartialEntity<T>;
+    const result = await this.repository
+      .createQueryBuilder()
+      .update()
+      .set(updateValues)
+      .where({ id, tenantId })
+      .execute();
+
+    return result?.affected > 0;
   }
 }

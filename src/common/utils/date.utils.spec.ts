@@ -32,6 +32,8 @@ describe('Suite tests DateUtils', () => {
       expect(format).toEqual('15-02-2021 21:07');
     });
   });
+
+  //
   describe('Suite tests stringToDate', () => {
     it('should be return date instance', () => {
       const format = DateUtils.stringToDate(
@@ -48,6 +50,8 @@ describe('Suite tests DateUtils', () => {
       expect(format).toEqual(new Date('02-15-2021 21:07'));
     });
   });
+  //
+
   describe('Suite tests subtractDateToString', () => {
     it('should be return (date - 1 day) instance DateFormatEnum.YYYY_MM_DD_HH_MM', () => {
       const format = DateUtils.subtractDateToString(
@@ -79,7 +83,7 @@ describe('Suite tests DateUtils', () => {
     });
   });
   describe('Suite tests addDateToString', () => {
-    it('should be return (date + 1 day) instance DateFormatEnum.YYYY_MM_DD_HH_MM', () => {
+    it('should be return (date + 1 day) instance DateFormatEnum.YYYY_MM_DD_HH_MM CASE 1', () => {
       const format = DateUtils.addDateToString(
         '02-15-2021 21:07',
         1,
@@ -88,6 +92,17 @@ describe('Suite tests DateUtils', () => {
       );
       expect(format).toEqual('2021-02-16 21:07');
     });
+
+    it('should be return (date + 1 day) instance DateFormatEnum.YYYY_MM_DD_HH_MM CASE 2', () => {
+      const format = DateUtils.addDateToString(
+        '2021-02-16 21:07',
+        1,
+        'day',
+        DateFormatEnum.YYYY_MM_DD_HH_MM,
+      );
+      expect(format).toEqual('2021-02-17 21:07');
+    });
+
     it('should be return (date + 1 year) instance DateFormatEnum.YYYY_MM_DD_HH_MM', () => {
       const format = DateUtils.addDateToString(
         '02-15-2021 21:07',
@@ -106,15 +121,7 @@ describe('Suite tests DateUtils', () => {
       );
       expect(format).toEqual('2021-04-03 21:00');
     });
-    it('should be return (date + 1 day) instance DateFormatEnum.YYYY_MM_DD', () => {
-      const format = DateUtils.addDateToString(
-        '2021-02-15',
-        1,
-        'day',
-        DateFormatEnum.YYYY_MM_DD,
-      );
-      expect(format).toEqual('2021-02-16');
-    });
+
     it('should be return (date + 1 year) instance DateFormatEnum.YYYY_MM_DD', () => {
       const format = DateUtils.addDateToString(
         '02-15-2021 23:00',
@@ -134,15 +141,18 @@ describe('Suite tests DateUtils', () => {
       expect(format).toEqual('2021-03-15');
     });
   });
-  describe('xxxxxxx', () => {
-    it('xxxxx', () => {
-      const d = DateUtils.addDayToString(
-        '2020-02-01',
-        1,
-        'day',
-        DateFormatEnum.YYYY_MM_DD,
+
+  describe('Suite tests addOneDayToString', () => {
+    it('should be return (date + 1 day) DateFormatEnum.YYYY_MM_DD CASE 1', () => {
+      const res = DateUtils.addOneDayToString('2020-01-01');
+      expect(res).toBe('2020-01-02');
+    });
+    it('should be return (date + 1 day) DateFormatEnum.YYYY_MM_DD_HH_MM CASE 2', () => {
+      const res = DateUtils.addOneDayToString(
+        '2020-01-01',
+        DateFormatEnum.YYYY_MM_DD_HH_MM,
       );
-      expect(d).toEqual('2020-02-02');
+      expect(res).toBe('2020-01-02 00:00');
     });
   });
 });

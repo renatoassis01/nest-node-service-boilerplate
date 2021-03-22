@@ -1,7 +1,7 @@
-import { IGetAllResult } from '../../../../common/interfaces/getallresult';
+import { IGetByFiltersResult } from '../../../../common/interfaces/getbyfiltersresult';
 import { BookModelBuilder } from '../../utils/builders/book.model.builder';
 import { BookResponseDTO } from './book.dto';
-import { GetAllBookResponseDTO } from './getall.book.dto';
+import { GetByFiltersBookResponseDTO } from './getbyfilters.book.dto';
 
 const book = new BookModelBuilder()
   .withId()
@@ -27,7 +27,7 @@ const book2 = new BookModelBuilder()
   .withAuthor('Machado de Assis')
   .build();
 
-const getAllResultRepository: IGetAllResult = {
+const getAllResultRepository: IGetByFiltersResult = {
   count: 2,
   limit: 20,
   page: 1,
@@ -44,7 +44,9 @@ const getAllResultRepository: IGetAllResult = {
 
 describe('Suite test  GetAllBookResponseDTO', () => {
   it('should return an interface IGetAllResult book', async () => {
-    const getAllBookResult = new GetAllBookResponseDTO(getAllResultRepository);
+    const getAllBookResult = new GetByFiltersBookResponseDTO(
+      getAllResultRepository,
+    );
     expect(getAllBookResult.data[0]).toEqual(new BookResponseDTO(book));
     expect(getAllBookResult.data[1]).toEqual(new BookResponseDTO(book2));
   });

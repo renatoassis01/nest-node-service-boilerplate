@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseGetAllResponseDTO } from '../../../../common/base/dtos/response/base.getall.dto';
-import { IGetAllResult } from '../../../../common/interfaces/getallresult';
+import { BaseGetByFiltersResponseDTO } from '../../../../common/base/dtos/response/base.getbyfilters.dto';
+import { IGetByFiltersResult } from '../../../../common/interfaces/getbyfiltersresult';
 import { BookResponseDTO } from './book.dto';
 
-export class GetAllBookResponseDTO extends BaseGetAllResponseDTO {
+export class GetByFiltersBookResponseDTO extends BaseGetByFiltersResponseDTO {
   @ApiProperty({ description: 'Books', type: [BookResponseDTO] })
   readonly data: BookResponseDTO[];
 
-  constructor(data: IGetAllResult) {
+  constructor(data: IGetByFiltersResult) {
     super(data);
     this.data =
       data?.data?.length > 0

@@ -1,4 +1,4 @@
-import { EnvironmentEnum } from '../common/enums/enviroment.enum';
+import { EnvironmentEnum } from '../system/enums/enviroment.enum';
 
 export class EnvironmentConfig {
   public static getServicePort(): number {
@@ -11,6 +11,10 @@ export class EnvironmentConfig {
 
   public static isEnvironmentDev(): boolean {
     return process.env.CURRENT_ENVIRONMENT === EnvironmentEnum.DEV;
+  }
+
+  public static isEnvironmentQA(): boolean {
+    return process.env.CURRENT_ENVIRONMENT === EnvironmentEnum.QA;
   }
 
   public static isEnvironmentPrd(): boolean {

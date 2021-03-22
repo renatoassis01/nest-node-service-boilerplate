@@ -13,7 +13,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserRequestMiddleware } from './system/middlewares/userrequest.middleware';
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './helth.controller';
-import { validate } from './system/dtos/enviromentconfigvalidator.dto';
+import { validate } from './config/dtos/enviromentconfigvalidator.dto';
 
 const databaseOptions = {
   ...getDatabaseConfigConnection(),
