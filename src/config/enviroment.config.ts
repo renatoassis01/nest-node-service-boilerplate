@@ -1,4 +1,5 @@
 import { EnvironmentEnum } from '../system/enums/enviroment.enum';
+import { IDatabaseConfig } from './interfaces/database.config';
 
 export class EnvironmentConfig {
   public static getServicePort(): number {
@@ -21,7 +22,7 @@ export class EnvironmentConfig {
     return process.env.CURRENT_ENVIRONMENT === EnvironmentEnum.PRD;
   }
 
-  public static getDatabaseConfig() {
+  public static getDatabaseConfig(): IDatabaseConfig {
     return {
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT, 10),

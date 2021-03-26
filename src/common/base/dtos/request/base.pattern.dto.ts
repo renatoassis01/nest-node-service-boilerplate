@@ -45,7 +45,7 @@ export class BaseGetByFiltersWithPatternRequestDTO
     enum: PatternQueryEnum,
   })
   @IsEnum(PatternQueryEnum, {
-    message: `must be START_WITH or END_WITH or IN_BETWEEN`,
+    message: `must be START_WITH or END_WITH or CONTAINS`,
   })
   @ValidateIf((prop) => !!prop.valueMatching)
   @IsNotEmpty()

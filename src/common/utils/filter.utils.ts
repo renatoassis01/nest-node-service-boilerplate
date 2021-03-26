@@ -8,6 +8,7 @@ import { FindOperator, Raw } from 'typeorm';
 import { IBaseAuditFilterDTO } from '../base/interfaces/base.audit.filter.dto';
 import { AuditFieldsEnum } from '../enums/auditfields.enum';
 import { DateUtils } from './date.utils';
+import { FilterRequestDTO } from '../types/filter.type.dto';
 
 export class FilterUtils {
   public static buildOrderBy(
@@ -123,5 +124,15 @@ export class FilterUtils {
       };
     }
     return condidtion;
+  }
+
+  public static isAllowedProperty<T>(
+    allowFields: Array<keyof T>,
+    constraint: 'sortParam' | 'fieldMatching',
+    filters: FilterRequestDTO<T>,
+  ): boolean {
+    const value = filters[constraint];
+    if (!value) return true;
+    return allowFields.filter((field) => field === value).length > 0;
   }
 }

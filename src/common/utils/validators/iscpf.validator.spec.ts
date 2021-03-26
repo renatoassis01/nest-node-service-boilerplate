@@ -7,6 +7,7 @@ class MyDTO {
   @IsCPF()
   cpf: string;
 }
+
 describe('Suite teste class validator @IsCPF()', () => {
   it('Should true if for a valid and masked cpf', () => {
     const model = new MyDTO();

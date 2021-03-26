@@ -9,6 +9,7 @@ import { PatternQueryEnum } from '../enums/patternquery.enum';
 import { AuditFieldsEnum } from '../enums/auditfields.enum';
 import { IBasePatternDTO } from '../base/interfaces/base.pattern.dto';
 import { IBaseAuditFilterDTO } from '../base/interfaces/base.audit.filter.dto';
+import { BaseModel } from '../base/models/base.model';
 
 describe('Suite teste QueryUtils', () => {
   describe('Tests function buildOrderBy', () => {
@@ -128,6 +129,29 @@ describe('Suite teste QueryUtils', () => {
       expect(result.createdAt.getSql(AuditFieldsEnum.CREATED_AT)).toContain(
         "'2021-03-03'::date",
       );
+    });
+  });
+
+  describe.only('Tests function isAllowedProperty', () => {
+    class MyModel extends BaseModel {
+      name: string;
+      lastname: string;
+      age: number;
+    }
+
+    it('should be return null CASE pattern', () => {
+      const filters: IBasePatternDTO = {
+        fieldMatching: 'name',
+        operatorMatching: OperatorQueryEnum.ILIKE,
+        valueMatching: FakerUtils.faker().name.firstName(),
+        patternMatching: PatternQueryEnum.END_WITH,
+      };
+      const isAllow = FilterUtils.isAllowedProperty<MyModel>(
+        ['name'],
+        'fieldMatching',
+        filters,
+      );
+      expect(isAllow).toBe(true);
     });
   });
 });

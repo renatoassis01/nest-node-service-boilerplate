@@ -7,6 +7,7 @@ class MyDTO {
   @IsCNPJ()
   cnpj: string;
 }
+
 describe('Suite teste class validator @IsCNPJ()', () => {
   it('Should true if for a valid and masked cnpj', () => {
     const model = new MyDTO();

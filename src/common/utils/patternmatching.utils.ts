@@ -20,7 +20,7 @@ export class PatternMatchingUtils {
     switch (pattern) {
       case PatternQueryEnum.START_WITH:
         return `'${value}%'`;
-      case PatternQueryEnum.IN_BETWEEN:
+      case PatternQueryEnum.CONTAINS:
         return `'%${value}%'`;
       case PatternQueryEnum.END_WITH:
         return `'%${value}'`;
