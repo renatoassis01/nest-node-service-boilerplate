@@ -4,10 +4,9 @@ import { DEFAULT_FIELDNAME_ORDER_BY } from '../constants/constants';
 import * as _ from 'lodash';
 import { IBasePatternDTO } from '../base/interfaces/base.pattern.dto';
 import { PatternMatchingUtils } from './patternmatching.utils';
-import { FindOperator, Raw } from 'typeorm';
+import { Between, FindOperator, Raw } from 'typeorm';
 import { IBaseAuditFilterDTO } from '../base/interfaces/base.audit.filter.dto';
 import { AuditFieldsEnum } from '../enums/auditfields.enum';
-import { DateUtils } from './date.utils';
 import { FilterRequestDTO } from '../types/filter.type.dto';
 
 export class FilterUtils {
@@ -114,13 +113,8 @@ export class FilterUtils {
         AuditFieldsEnum.DELETED_AT,
       ].includes(fieldAudit)
     ) {
-      const endDatePlusOne = DateUtils.addOneDayToString(endDateAudit);
       condidtion = {
-        [fieldAudit]: Raw(
-          (alias) =>
-            `CAST(${alias} as date) >= '${startDateAudit}'::date
-              AND CAST(${alias} as date) < '${endDatePlusOne}'::date)`,
-        ),
+        [fieldAudit]: Between(startDateAudit, endDateAudit),
       };
     }
     return condidtion;

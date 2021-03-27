@@ -112,6 +112,7 @@ describe('Suite teste QueryUtils', () => {
       );
     });
   });
+
   describe('Tests function buildWhereAuditFields', () => {
     it('should be return null', () => {
       const data: IBaseAuditFilterDTO = {};
@@ -124,22 +125,21 @@ describe('Suite teste QueryUtils', () => {
         startDateAudit: '2021-03-02',
         endDateAudit: '2021-03-02',
       };
-
       const result = FilterUtils.buildWhereAuditFields(data);
-      expect(result.createdAt.getSql(AuditFieldsEnum.CREATED_AT)).toContain(
-        "'2021-03-03'::date",
-      );
+
+      expect(result.createdAt.type).toEqual('between');
+      expect(result.createdAt.value).toEqual(['2021-03-02', '2021-03-02']);
     });
   });
 
-  describe.only('Tests function isAllowedProperty', () => {
+  describe('Tests function isAllowedProperty', () => {
     class MyModel extends BaseModel {
       name: string;
       lastname: string;
       age: number;
     }
 
-    it('should be return null CASE pattern', () => {
+    it('should be return true if fieldMatching  allow', () => {
       const filters: IBasePatternDTO = {
         fieldMatching: 'name',
         operatorMatching: OperatorQueryEnum.ILIKE,
@@ -152,6 +152,44 @@ describe('Suite teste QueryUtils', () => {
         filters,
       );
       expect(isAllow).toBe(true);
+    });
+    it('should be return false if fieldMatching not allow', () => {
+      const filters: IBasePatternDTO = {
+        fieldMatching: 'name',
+        operatorMatching: OperatorQueryEnum.ILIKE,
+        valueMatching: FakerUtils.faker().name.firstName(),
+        patternMatching: PatternQueryEnum.END_WITH,
+      };
+      const isAllow = FilterUtils.isAllowedProperty<MyModel>(
+        ['lastname'],
+        'fieldMatching',
+        filters,
+      );
+      expect(isAllow).toBe(false);
+    });
+    it('should be return true if sortParam  allow', () => {
+      const filters: IBaseOrderByDTO = {
+        sortOrder: SortOrderEnum.ASC,
+        sortParam: 'name',
+      };
+      const isAllow = FilterUtils.isAllowedProperty<MyModel>(
+        ['name'],
+        'sortParam',
+        filters,
+      );
+      expect(isAllow).toBe(true);
+    });
+    it('should be return false if sortParam not allow', () => {
+      const filters: IBaseOrderByDTO = {
+        sortOrder: SortOrderEnum.ASC,
+        sortParam: 'name',
+      };
+      const isAllow = FilterUtils.isAllowedProperty<MyModel>(
+        ['lastname'],
+        'sortParam',
+        filters,
+      );
+      expect(isAllow).toBe(false);
     });
   });
 });

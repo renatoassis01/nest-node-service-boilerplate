@@ -54,8 +54,7 @@ export class BaseRepository<T extends BaseModel>
     const sortOrder = filters?.sortOrder;
     const sortParam = filters?.sortParam;
     const withDeleted = filters?.withDeleted || false;
-    const fieldsModel = FilterUtils.excludeFieldsFilter(filters);
-    //const fieldsModel = this.repository.create(filters);
+    const fieldsModel = this.repository.create(filters);
     const whereCondition = FilterUtils.buildWhere(tenantId, fieldsModel);
     const whereConditionWithAudit = FilterUtils.buildWhereAuditFields(filters);
     const patternMatchingConditon = FilterUtils.buildWherePatternMatching(
@@ -79,7 +78,7 @@ export class BaseRepository<T extends BaseModel>
       relations,
     };
     const [data, count] = await this.repository.findAndCount(options);
-    return PaginationUtils.buildPaginatedGetAll({
+    return PaginationUtils.buildPaginatedGetByFilters({
       data,
       count,
       page,

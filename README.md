@@ -71,15 +71,17 @@ $ npm run test:cov
 
 [x] configurar migrations
 
-[x] Lint para nomes de arquivos
+[x] Lint para nomes de arquivos(Parou de funcionar)
 
 [x] Implementar padrão de testes(precisa ser melhorado)
 
-[] Transações
+[] Resolver os problema de propriedades snake_case "created_at", "updated_at", "deleted_at" para camelCase (conversão automatica)
 
 [] criar um guia de boas práticas
 
 [] Implementar logger
+
+[] Transações
 
 Algumas decisões devem ser tomadas em conjunto:
 
@@ -90,7 +92,7 @@ Algumas decisões devem ser tomadas em conjunto:
 
 - escolher um serviço para implementar e validar várias ideia proposta no projeto.
 
-- usar o code artifact da AWS para publicar pacote privados, transformando algumas classe desse projeto em pacote(diminuir tempo de teste e centralizar as mudanças em classes bases)
+- usar o code artifact da AWS para publicar pacote privados, transformando algumas classe desse projeto em pacote(diminuir tempo de teste e centralizar as mudanças em classes bases) e testes alguns testes são pesados pra ficar junto com os microserviços
 
 https://wanago.io/2020/07/13/api-nestjs-testing-services-controllers-integration-tests/
 

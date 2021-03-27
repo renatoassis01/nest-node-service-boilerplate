@@ -11,7 +11,7 @@ const data = {
 };
 
 describe('Suite teste PaginationUtils', () => {
-  describe('Tests function buildPaginatedGetAll', () => {
+  describe('Tests function buildPaginatedGetByFilters', () => {
     it('call function with all parameters', () => {
       const buildOptions: IBuildPaginetedOptions = {
         data: [data],
@@ -19,7 +19,7 @@ describe('Suite teste PaginationUtils', () => {
         page: 1,
         size: 1,
       };
-      const result = PaginationUtils.buildPaginatedGetAll(buildOptions);
+      const result = PaginationUtils.buildPaginatedGetByFilters(buildOptions);
       expect(result.totalPages).not.toBeUndefined();
       expect(result.count).not.toBeUndefined();
       expect(result.limit).not.toBeUndefined();
@@ -31,7 +31,7 @@ describe('Suite teste PaginationUtils', () => {
         data: [data],
         count: 1,
       };
-      const result = PaginationUtils.buildPaginatedGetAll(buildOptions);
+      const result = PaginationUtils.buildPaginatedGetByFilters(buildOptions);
       expect(result.limit).toEqual(DEFAULT_PAGINATION_SIZE);
       expect(result.page).toEqual(DEFAULT_PAGINATION_PAGE);
     });

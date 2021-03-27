@@ -8,12 +8,13 @@ import {
   Post,
   Put,
   Query,
+  UsePipes,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiCreatedResponse,
-  ApiHeaders,
+  ApiExtraModels,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -21,25 +22,23 @@ import {
 import { StoreBookRequestDTO } from '../dtos/request/store.book.dto';
 import { BookService } from '../services/book.service';
 import { BookResponseDTO } from '../dtos/response/book.dto';
-import { TenantId } from '../../../common/decorators/tenantId.decorator';
+import { TenantId } from '../../../common/decorators/middlewares/tenantId.decorator';
 import { GetByFiltersBookRequestDTO } from '../dtos/request/getbyfilters.book.dto';
 import { GetByFiltersBookResponseDTO } from '../dtos/response/getbyfilters.book.dto';
 import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
-import { UserId } from '../../../common/decorators/userId.decorator';
+import { UserId } from '../../../common/decorators/middlewares/userId.decorator';
+import { BookModel } from '../models/book.model';
+import { FieldMatchingValidationPipe } from '../../../common/pipes/fieldmatching.validation.pipe';
+import { SortParamValidationPipe } from '../../../common/pipes/sortparam.validation.pipe';
+import { ApiResponseData } from '../../../common/decorators/swagger/apiresponse.decorator';
+import { ApiCreatedResponseData } from '../../../common/decorators/swagger/apicreatedresponse.decorator';
+import { ApiTenantHeader } from '../../../common/decorators/swagger/apitenantheader.decorator';
+import { ApiUserRequestHeader } from '../../../common/decorators/swagger/apiuserheader.decorator';
+import { ErrorReponseDTO } from '../../../common/dtos/response/error.dto';
 
 @ApiTags('books')
-@ApiHeaders([
-  {
-    name: 'tenantid',
-    description: 'TenantId',
-    required: true,
-  },
-  {
-    name: 'userid',
-    description: 'userId',
-    required: true,
-  },
-])
+@ApiTenantHeader()
+@ApiUserRequestHeader()
 @ApiUnauthorizedResponse({
   description:
     'Validation failed (tenantid  is expected) or Validation failed (userid  is expected)',
@@ -47,17 +46,25 @@ import { UserId } from '../../../common/decorators/userId.decorator';
 @ApiBadRequestResponse({
   description: 'Bad Request',
 })
-@ApiInternalServerErrorResponse({ description: 'Internal Server Error' })
+@ApiInternalServerErrorResponse({
+  description: 'Sorry we are experiencing technical problems',
+})
+@ApiExtraModels(ErrorReponseDTO)
 @Controller('books')
 export class BookController {
   constructor(private bookService: BookService) {}
 
   @Get()
+  //@ApiBadRequestFieldMatching<BookModel>(['name', 'isbn', 'author'])
   @ApiResponse({
     status: 200,
     description: 'The records has been successfully return',
     type: GetByFiltersBookResponseDTO,
   })
+  @UsePipes(
+    new FieldMatchingValidationPipe<BookModel>(['name', 'isbn', 'author']),
+    new SortParamValidationPipe<BookModel>(['name', 'isbn', 'author']),
+  )
   async index(
     @TenantId() tenantId: string,
     @Query() filters: GetByFiltersBookRequestDTO,
@@ -67,7 +74,7 @@ export class BookController {
   }
 
   @Post()
-  @ApiCreatedResponse({
+  @ApiCreatedResponseData({
     description: 'The record has been successfully stored',
     type: BookResponseDTO,
   })
@@ -81,12 +88,12 @@ export class BookController {
   }
 
   @Get(':id')
-  @ApiResponse({
+  @ApiResponseData({
     status: 200,
     description: 'The record has been successfully return',
     type: BookResponseDTO,
   })
-  @ApiResponse({ status: 404, description: 'Book not found' })
+  @ApiNotFoundResponse({ description: 'Book not found' })
   async get(
     @TenantId() tenantId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -96,11 +103,12 @@ export class BookController {
   }
 
   @Put(':id')
-  @ApiResponse({
+  @ApiResponseData({
     status: 200,
     description: 'The record has been successfully return',
+    type: BookResponseDTO,
   })
-  @ApiResponse({ status: 404, description: 'Book not found' })
+  @ApiNotFoundResponse({ description: 'Book not found' })
   async update(
     @TenantId() tenantId: string,
     @UserId() userId: string,
@@ -116,7 +124,7 @@ export class BookController {
     status: 200,
     description: 'The record has been successfully deleted',
   })
-  @ApiResponse({ status: 404, description: 'Book not found' })
+  @ApiNotFoundResponse({ description: 'Book not found' })
   async delete(
     @TenantId() tenantId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -129,7 +137,7 @@ export class BookController {
     status: 200,
     description: 'The record has been successfully removed logical',
   })
-  @ApiResponse({ status: 404, description: 'Book not found' })
+  @ApiNotFoundResponse({ description: 'Book not found' })
   async disable(
     @TenantId() tenantId: string,
     @UserId() userId: string,
@@ -143,7 +151,7 @@ export class BookController {
     status: 200,
     description: 'The record has been successfully restored logical',
   })
-  @ApiResponse({ status: 404, description: 'Book not found' })
+  @ApiNotFoundResponse({ description: 'Book not found' })
   async enable(
     @TenantId() tenantId: string,
     @UserId() userId: string,

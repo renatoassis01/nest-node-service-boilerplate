@@ -7,13 +7,13 @@ import { SwaggerUtils } from './system/utils/swagger.utils';
 import { TransformInterceptor } from './system/interceptors/transform.interceptor';
 import { InfoUtils } from './system/utils/info.utils';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { PostgresExceptionsFilter } from './system/exceptions/postgresfilter.exceptions';
+import { ErrorHandlerExceptionFilter } from './system/exceptions/errorhandler.exception';
 const ROOT_API_PATH = 'api';
 const PORT = EnvironmentConfig.getServicePort();
 
 async function setupNestApplication(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  //app.useGlobalFilters(new PostgresExceptionsFilter());
+  app.useGlobalFilters(new ErrorHandlerExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
   app.disable('x-powered-by');
   app.useGlobalPipes(

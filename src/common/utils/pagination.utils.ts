@@ -8,7 +8,7 @@ import {
 } from '../constants/constants';
 
 export class PaginationUtils {
-  public static buildPaginatedGetAll(
+  public static buildPaginatedGetByFilters(
     buildOptions: IBuildPaginetedOptions,
   ): IGetByFiltersResult {
     const limit = buildOptions?.size || DEFAULT_PAGINATION_SIZE;

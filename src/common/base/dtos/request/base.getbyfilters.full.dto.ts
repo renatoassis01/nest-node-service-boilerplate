@@ -8,6 +8,7 @@ import {
   IsOptional,
   IsUUID,
   IsBoolean,
+  IsDateString,
 } from 'class-validator';
 import { AuditFieldsEnum } from '../../../enums/auditfields.enum';
 import { DateFormatEnum } from '../../../enums/dateformat.enum';
@@ -79,8 +80,9 @@ export class BaseGetByFiltersFullRequestDTO implements IBaseFilter {
     description: 'Record audit date start',
     type: Date,
   })
+  @IsDateString()
   @Transform(({ value }) =>
-    DateUtils.formatDateToString(value, DateFormatEnum.YYYY_MM_DD),
+    DateUtils.formatDateToString(value, DateFormatEnum.YYYY_MM_DD_HH_MM),
   )
   @ValidateIf((prop) => !!prop.fieldAudit || !!prop.endDateAudit)
   @IsNotEmpty()
@@ -90,8 +92,9 @@ export class BaseGetByFiltersFullRequestDTO implements IBaseFilter {
     description: 'Record audit date start',
     type: Date,
   })
+  @IsDateString()
   @Transform(({ value }) =>
-    DateUtils.formatDateToString(value, DateFormatEnum.YYYY_MM_DD),
+    DateUtils.formatDateToString(value, DateFormatEnum.YYYY_MM_DD_HH_MM),
   )
   @ValidateIf((prop) => !!prop.fieldAudit || !!prop.startDateAudit)
   @IsNotEmpty()
