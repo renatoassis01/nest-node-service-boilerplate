@@ -31,12 +31,4 @@ export class EnvironmentConfig {
       database: process.env.DB_NAME,
     };
   }
-
-  public static getMongoConfig() {
-    return {
-      host: process.env.MONGO_HOST,
-      port: parseInt(process.env.MONGO_PORT, 10) || 27017,
-      database: process.env.MONGO_DBNAME,
-    };
-  }
 }

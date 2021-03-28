@@ -18,8 +18,6 @@ export const config: TypeOrmModuleOptions = {
 export function getDatabaseConfigConnection(): TypeOrmModuleOptions {
   return {
     ...config,
-    migrationsRun: true,
-    synchronize: true,
     entities: ['dist/modules/**/models/*.model.{ts,js}'],
   };
 }
@@ -29,15 +27,6 @@ export function getDatabaseConfigConnectionQA(): TypeOrmModuleOptions {
     ...config,
     migrationsRun: true,
     synchronize: true,
-  };
-}
-
-export function getDatabaseConfigConnectionQAInMemory(): TypeOrmModuleOptions {
-  return {
-    name: 'default',
-    type: 'sqlite',
-    database: ':memory:',
-    migrationsRun: true,
-    synchronize: true,
+    logging: false,
   };
 }
