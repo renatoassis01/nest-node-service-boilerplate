@@ -25,38 +25,6 @@ export class FilterUtils {
     return !!fieldsModel ? { tenantId, ...fieldsModel } : { tenantId };
   }
 
-  /**
-   * Remove os campos do filtro padrão.
-   * @param filters
-   * - Campos adicionais que não fazem parte de um model pode ser passado aqui
-   * @param omitAdditionalFields
-   */
-  public static excludeFieldsFilter(
-    filters: Record<symbol, unknown>,
-    omitAdditionalFields?: string[],
-  ): Pick<Record<string, unknown>, never> {
-    const filterFields = [
-      'page',
-      'size',
-      'sortOrder',
-      'sortParam',
-      'withDeleted',
-      'withRelations',
-      'fieldMatching',
-      'operatorMatching',
-      'valueMatching',
-      'patternMatching',
-      'fieldAudit',
-      'startDateAudit',
-      'endDateAudit',
-    ];
-
-    const fieldConcats = !!omitAdditionalFields
-      ? [...filterFields, ...omitAdditionalFields]
-      : filterFields;
-    return _.omit(filters, fieldConcats);
-  }
-
   public static buildWherePatternMatching(
     pattern: IBasePatternDTO,
   ): { [field: string]: FindOperator<any> } | undefined {

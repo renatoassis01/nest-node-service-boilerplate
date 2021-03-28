@@ -2,7 +2,6 @@ import { IBaseOrderByDTO } from '../base/interfaces/base.orderby.dto';
 import { SortOrderEnum } from '../enums/sortorder.enum';
 import { DEFAULT_FIELDNAME_ORDER_BY } from '../constants/constants';
 import { FilterUtils } from './filter.utils';
-import { IBaseFilter } from '../base/interfaces/base.filter.dto';
 import { FakerUtils } from './faker.utils';
 import { OperatorQueryEnum } from '../enums/operatorquery.enum';
 import { PatternQueryEnum } from '../enums/patternquery.enum';
@@ -34,58 +33,6 @@ describe('Suite teste QueryUtils', () => {
       };
       const order = FilterUtils.buildOrderBy(builder);
       expect(order).toEqual(sort);
-    });
-  });
-  describe('Tests function excludeFieldsFilter', () => {
-    const filter: IBaseFilter = {
-      page: 1,
-      size: 10,
-      sortOrder: SortOrderEnum.ASC,
-      sortParam: 'name',
-      withDeleted: true,
-      withRelations: true,
-      fieldMatching: 'name',
-      operatorMatching: OperatorQueryEnum.ILIKE,
-      valueMatching: FakerUtils.faker().random.word(),
-      patternMatching: PatternQueryEnum.END_WITH,
-      fieldAudit: AuditFieldsEnum.CREATED_AT,
-      startDateAudit: '2021-01-11',
-      endDateAudit: '2021-01-11',
-    };
-
-    it('must be true if return object property omit', () => {
-      const data = {
-        name: FakerUtils.faker().name.firstName(),
-        lastname: FakerUtils.faker().name.lastName(),
-        age: 33,
-      };
-
-      const result = FilterUtils.excludeFieldsFilter({ ...filter, ...data });
-      expect(result).not.toContain('page');
-      expect(result).not.toContain('size');
-      expect(result).not.toContain('sortOrder');
-      expect(result).not.toContain('sortParam');
-      expect(result).not.toContain('withDeleted');
-      expect(result).not.toContain('withRelations');
-      expect(result).not.toContain('fieldMatching');
-      expect(result).not.toContain('operatorMatching');
-      expect(result).not.toContain('valueMatching');
-      expect(result).not.toContain('patternMatching');
-      expect(result).not.toContain('fieldAudit');
-      expect(result).not.toContain('startDateAudit');
-      expect(result).not.toContain('endDateAudit');
-    });
-    it('must be true if return object property omit additional field', () => {
-      const data = {
-        name: FakerUtils.faker().name.firstName(),
-        lastname: FakerUtils.faker().name.lastName(),
-        age: 33,
-        additionalField: FakerUtils.faker().random.word(),
-      };
-      const result = FilterUtils.excludeFieldsFilter({ ...filter, ...data }, [
-        'additionalField',
-      ]);
-      expect(result).not.toContain('additionalField');
     });
   });
 
