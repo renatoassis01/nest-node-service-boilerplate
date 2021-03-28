@@ -1,5 +1,8 @@
 {
   "max-len": 80,
   "debug": false,
-  "showInvalidHeader": false
+  "showInvalidHeader": false,
+  "postSubjectDescriptions": [
+    "see more about conventional commits at https://www.conventionalcommits.org/pt-br"
+  ]
 }
