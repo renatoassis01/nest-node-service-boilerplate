@@ -29,8 +29,12 @@ export class BookService {
     return await this.repository.getByFilters(tenantId, filters);
   }
 
-  public async getById(tenantId: string, id: string): Promise<BookModel> {
-    const book = await this.repository.getById(tenantId, id);
+  public async getById(
+    tenantId: string,
+    id: string,
+    withDeleted = false,
+  ): Promise<BookModel> {
+    const book = await this.repository.getById(tenantId, id, withDeleted);
     if (!book) throw new NotFoundException('Book not found');
     return book;
   }

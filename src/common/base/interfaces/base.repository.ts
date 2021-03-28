@@ -8,8 +8,8 @@ export interface IBaseRepository<T extends BaseModel> {
   getById(
     tenantId: string,
     id: string,
-    relations?: string[],
     withDeleted?: boolean,
+    relations?: string[],
   ): Promise<T>;
 
   getByFilters(

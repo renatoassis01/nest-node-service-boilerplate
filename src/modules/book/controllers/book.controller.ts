@@ -35,6 +35,7 @@ import { ApiCreatedResponseData } from '../../../common/decorators/swagger/apicr
 import { ApiTenantHeader } from '../../../common/decorators/swagger/apitenantheader.decorator';
 import { ApiUserRequestHeader } from '../../../common/decorators/swagger/apiuserheader.decorator';
 import { ErrorReponseDTO } from '../../../common/dtos/response/error.dto';
+import { GetBookRequestDTO } from '../dtos/request/get.book.dto';
 
 @ApiTags('books')
 @ApiTenantHeader()
@@ -97,8 +98,13 @@ export class BookController {
   async get(
     @TenantId() tenantId: string,
     @Param('id', new ParseUUIDPipe()) id: string,
+    @Query() filter: GetBookRequestDTO,
   ): Promise<BookResponseDTO> {
-    const result = await this.bookService.getById(tenantId, id);
+    const result = await this.bookService.getById(
+      tenantId,
+      id,
+      filter.withDeleted,
+    );
     return new BookResponseDTO(result);
   }
 

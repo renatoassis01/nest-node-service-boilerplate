@@ -27,8 +27,8 @@ export class BaseRepository<T extends BaseModel>
   public async getById(
     tenantId: string,
     id: string,
-    relations?: string[],
     withDeleted = false,
+    relations?: string[],
   ): Promise<T> {
     const options: FindOneOptions = {
       where: { id, tenantId },
