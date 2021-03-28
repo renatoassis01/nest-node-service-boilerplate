@@ -14,9 +14,8 @@ const book = new BookModelBuilder()
   .build();
 
 describe('Suite test  BookResponseDTO', () => {
-  it('should return an interface IGetAllResult book', async () => {
+  it('should return an BookResponseDTO', async () => {
     const bookReponseDTO = new BookResponseDTO(book);
-    expect(bookReponseDTO).not.toHaveProperty('createdAt');
     expect(bookReponseDTO).not.toContain('deletedAt');
   });
 });

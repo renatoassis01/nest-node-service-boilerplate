@@ -27,10 +27,12 @@ describe('BookService', () => {
         {
           provide: getCustomRepositoryToken(BookRepository),
           useValue: {
-            create: jest.fn(),
+            store: jest.fn(),
             getById: jest.fn(),
-            getAll: jest.fn(),
+            getByFilters: jest.fn(),
             deleteById: jest.fn(),
+            enableById: jest.fn(),
+            disableById: jest.fn(),
             updateById: jest.fn(),
           },
         },
@@ -45,7 +47,7 @@ describe('BookService', () => {
 
   it('should be return a book', async () => {
     const repositorySpy = jest
-      .spyOn(repository, 'create')
+      .spyOn(repository, 'store')
       .mockResolvedValue(new Promise((resolve) => resolve(book)));
     const createBookDTO = new StoreBookRequestDTO();
     createBookDTO.name = book.name;

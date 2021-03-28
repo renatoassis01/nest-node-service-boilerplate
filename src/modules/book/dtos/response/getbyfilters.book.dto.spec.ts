@@ -43,7 +43,7 @@ const getAllResultRepository: IGetByFiltersResult = {
 };
 
 describe('Suite test  GetAllBookResponseDTO', () => {
-  it('should return an interface IGetAllResult book', async () => {
+  it('should return an interface IGetByFiltersResult book', async () => {
     const getAllBookResult = new GetByFiltersBookResponseDTO(
       getAllResultRepository,
     );

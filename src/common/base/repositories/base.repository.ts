@@ -91,15 +91,15 @@ export class BaseRepository<T extends BaseModel>
     userId: string,
     id: string,
     partialEntity: DeepPartial<T>,
-  ): Promise<T> {
+  ): Promise<T | undefined> {
     const result = await this.repository
       .createQueryBuilder()
       .update()
       .set({ ...partialEntity, userId })
       .where({ id, tenantId })
-      //.returning('*') //  ReturningStatementNotSupportedError: OUTPUT or RETURNING clause only supported by Microsoft SQL Server or PostgreSQL databases.
+      .returning('*') // não funciona no sqlite  ReturningStatementNotSupportedError: OUTPUT or RETURNING clause only supported by Microsoft SQL Server or PostgreSQL databases.
       .execute();
-    return result.raw;
+    return result.affected > 0 ? result.raw[0] : undefined;
   }
 
   public async deleteById(tenantId: string, id: string): Promise<boolean> {

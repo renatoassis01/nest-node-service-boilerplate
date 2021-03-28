@@ -56,7 +56,6 @@ export class BookController {
   constructor(private bookService: BookService) {}
 
   @Get()
-  //@ApiBadRequestFieldMatching<BookModel>(['name', 'isbn', 'author'])
   @ApiResponse({
     status: 200,
     description: 'The records has been successfully return',

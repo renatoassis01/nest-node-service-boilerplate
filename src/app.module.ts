@@ -14,6 +14,8 @@ import { UserRequestMiddleware } from './system/middlewares/userrequest.middlewa
 import { TerminusModule } from '@nestjs/terminus';
 import { HealthController } from './helth.controller';
 import { validate } from './config/dtos/enviromentconfigvalidator.dto';
+import { APP_FILTER } from '@nestjs/core';
+import { ErrorHandlerExceptionFilter } from './system/exceptions/errorhandler.exception';
 
 const databaseOptions = {
   ...getDatabaseConfigConnection(),
@@ -28,7 +30,12 @@ const databaseOptions = {
     BookModule,
   ],
   controllers: [HealthController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: ErrorHandlerExceptionFilter,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

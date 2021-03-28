@@ -10,12 +10,12 @@ export class ErrorHandlerExceptionFilter extends BaseExceptionFilter {
 
     let error =
       exception.status === HttpStatus.INTERNAL_SERVER_ERROR
-        ? 'Sorry we are experiencing technical problems.'
+        ? 'Sorry we are experiencing technical problems'
         : undefined;
 
     let message =
       exception.status === HttpStatus.INTERNAL_SERVER_ERROR
-        ? 'Contact our team.'
+        ? 'Contact our team'
         : undefined;
 
     response.status(exception.status).json(

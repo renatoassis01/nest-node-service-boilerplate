@@ -67,8 +67,8 @@ describe('Suite test BaseRepository', () => {
     jest.resetAllMocks();
   });
 
-  describe('Suite tests [create]', () => {
-    it('should be create a entity', async () => {
+  describe('Suite tests [store]', () => {
+    it('must create an entity', async () => {
       const result = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
@@ -81,7 +81,7 @@ describe('Suite test BaseRepository', () => {
   });
 
   describe('Suite tests [getById]', () => {
-    it('should be return a entity', async () => {
+    it('should be return an entity', async () => {
       const created = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
@@ -90,7 +90,43 @@ describe('Suite test BaseRepository', () => {
       const todo = await todoRepository.getById(created.tenantId, created.id);
       expect(todo.id).toEqual(created.id);
     });
-    it('entity not found', async () => {
+    it('should be return an entity disabled', async () => {
+      const created = await todoRepository.store(
+        todo1.tenantId,
+        todo1.userId,
+        todo1DTO,
+      );
+
+      await todoRepository.disableById(
+        created.tenantId,
+        created.userId,
+        created.id,
+      );
+
+      const result = await todoRepository.getById(
+        created.tenantId,
+        created.id,
+        true,
+      );
+      expect(result.id).toEqual(created.id);
+    });
+    it('should be not return an entity disabled', async () => {
+      const created = await todoRepository.store(
+        todo1.tenantId,
+        todo1.userId,
+        todo1DTO,
+      );
+
+      await todoRepository.disableById(
+        created.tenantId,
+        created.userId,
+        created.id,
+      );
+
+      const result = await todoRepository.getById(created.tenantId, created.id);
+      expect(result).toBeUndefined();
+    });
+    it('must not find an entity', async () => {
       const created = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
@@ -105,14 +141,14 @@ describe('Suite test BaseRepository', () => {
   });
 
   describe('Suite tests [updateById]', () => {
-    it('should be updated a entity', async () => {
+    it('should be updated an entity', async () => {
       const otherUserId = FakerUtils.faker().random.uuid();
       const created = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
         todo1DTO,
       );
-      await todoRepository.updateById(
+      const updated = await todoRepository.updateById(
         created.tenantId,
         otherUserId,
         created.id,
@@ -122,18 +158,35 @@ describe('Suite test BaseRepository', () => {
         },
       );
 
-      const updated = await todoRepository.getById(
-        created.tenantId,
-        created.id,
-      );
-
-      expect(created.name).not.toEqual(updated.name);
+      expect(updated).not.toBeUndefined();
+      expect(updated.id).toBe(created.id);
       expect(updated.userId).toEqual(otherUserId);
+      expect(updated.updatedAt).not.toEqual(created.updatedAt);
       expect(updated.done).toEqual(true);
     });
+
+    it('should not update an entity', async () => {
+      const otherUserId = FakerUtils.faker().random.uuid();
+      const created = await todoRepository.store(
+        todo1.tenantId,
+        todo1.userId,
+        todo1DTO,
+      );
+      const result = await todoRepository.updateById(
+        created.tenantId,
+        otherUserId,
+        FakerUtils.faker().random.uuid(),
+        {
+          name: FakerUtils.faker().random.words(2),
+          done: true,
+        },
+      );
+
+      expect(result).toBeUndefined();
+    });
   });
-  describe('Suite test [removeById]', () => {
-    it('must return true entities removed', async () => {
+  describe('Suite test [disableById]', () => {
+    it('must disabled an entity', async () => {
       const result = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
@@ -141,13 +194,13 @@ describe('Suite test BaseRepository', () => {
       );
       await todoRepository.disableById(
         result.tenantId,
-        result.id,
         result.userId,
+        result.id,
       );
       const data = await todoRepository.getById(result.tenantId, result.id);
       expect(data).toBeUndefined();
     });
-    it('must return false entities not removed', async () => {
+    it('must return false if it does not disable an entity', async () => {
       const result = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
@@ -155,15 +208,52 @@ describe('Suite test BaseRepository', () => {
       );
       const isDeleted = await todoRepository.disableById(
         result.tenantId,
-        FakerUtils.faker().random.uuid(),
         result.userId,
+        FakerUtils.faker().random.uuid(),
       );
       expect(isDeleted).toBe(false);
     });
   });
 
+  describe('Suite test [enableById]', () => {
+    it('must return true if a restored entity', async () => {
+      const result = await todoRepository.store(
+        todo1.tenantId,
+        todo1.userId,
+        todo1DTO,
+      );
+      const isDisabled = await todoRepository.disableById(
+        result.tenantId,
+        result.userId,
+        result.id,
+      );
+      const data = await todoRepository.getById(result.tenantId, result.id);
+      const isEnabled = await todoRepository.enableById(
+        result.tenantId,
+        result.userId,
+        result.id,
+      );
+      expect(data).toBeUndefined();
+      expect(isDisabled).toBe(true);
+      expect(isEnabled).toBe(true);
+    });
+    it('must return false if not a restored entity', async () => {
+      const result = await todoRepository.store(
+        todo1.tenantId,
+        todo1.userId,
+        todo1DTO,
+      );
+      const isEnabled = await todoRepository.enableById(
+        result.tenantId,
+        result.userId,
+        FakerUtils.faker().random.uuid(),
+      );
+      expect(isEnabled).toBe(false);
+    });
+  });
+
   describe('Suite test [deleteById]', () => {
-    it('must return true entities deleteds', async () => {
+    it('must return true an entity deleted', async () => {
       const result = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
@@ -173,7 +263,7 @@ describe('Suite test BaseRepository', () => {
       const data = await todoRepository.getById(result.tenantId, result.id);
       expect(data).toBeUndefined();
     });
-    it('must return false entities not deleteds', async () => {
+    it('must return false an entity not deleted', async () => {
       const result = await todoRepository.store(
         todo1.tenantId,
         todo1.userId,
@@ -187,7 +277,7 @@ describe('Suite test BaseRepository', () => {
     });
   });
 
-  describe('Suite tests [getAll]', () => {
+  describe('Suite tests [getByFilters]', () => {
     it('tests paginator', async () => {
       const totalTodos = 6;
       const tenantId = FakerUtils.faker().random.uuid();
@@ -233,7 +323,7 @@ describe('Suite test BaseRepository', () => {
       });
       expect(result.data[0].name).toBe(last.name);
     });
-    it('must return entities deleteds', async () => {
+    it('must return entities not deleted', async () => {
       const totalTodos = 6;
       const tenantId = FakerUtils.faker().random.uuid();
       const todos = await createManyTodos(todoRepository, tenantId, totalTodos);
@@ -241,12 +331,27 @@ describe('Suite test BaseRepository', () => {
 
       const result = await todoRepository.getByFilters(tenantId);
 
-      await todoRepository.disableById(tenantId, todo.id, todo.userId);
+      await todoRepository.disableById(tenantId, todo.userId, todo.id);
       const resultWithDelteds = await todoRepository.getByFilters(tenantId, {
         withDeleted: false,
       });
       expect(result.data.length).toBe(totalTodos);
       expect(resultWithDelteds.data.length).toBe(totalTodos - 1);
+    });
+    it('must return entities', async () => {
+      const totalTodos = 6;
+      const tenantId = FakerUtils.faker().random.uuid();
+      const todos = await createManyTodos(todoRepository, tenantId, totalTodos);
+      const todo: TodoModel = todos[2];
+
+      const result = await todoRepository.getByFilters(tenantId);
+
+      await todoRepository.disableById(tenantId, todo.userId, todo.id);
+      const resultWithDelteds = await todoRepository.getByFilters(tenantId, {
+        withDeleted: true,
+      });
+      expect(result.data.length).toBe(totalTodos);
+      expect(resultWithDelteds.data.length).toBe(totalTodos);
     });
   });
 });

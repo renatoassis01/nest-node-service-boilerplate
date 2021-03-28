@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { EnvironmentConfig } from './config/enviroment.config';
@@ -8,6 +7,8 @@ import { TransformInterceptor } from './system/interceptors/transform.intercepto
 import { InfoUtils } from './system/utils/info.utils';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ErrorHandlerExceptionFilter } from './system/exceptions/errorhandler.exception';
+import validatorPipe from './system/utils/validador.pipe.utils';
+
 const ROOT_API_PATH = 'api';
 const PORT = EnvironmentConfig.getServicePort();
 
@@ -15,19 +16,9 @@ async function setupNestApplication(): Promise<NestExpressApplication> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalFilters(new ErrorHandlerExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
+  app.enableCors();
   app.disable('x-powered-by');
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-      whitelist: true,
-      validateCustomDecorators: true,
-      forbidNonWhitelisted: true,
-      forbidUnknownValues: true,
-    }),
-  );
+  app.useGlobalPipes(validatorPipe);
   app.setGlobalPrefix(ROOT_API_PATH);
   return app;
 }

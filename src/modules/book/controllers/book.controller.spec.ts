@@ -10,6 +10,7 @@ import { getCustomRepositoryToken } from '@nestjs/typeorm';
 import * as request from 'supertest';
 import { FakerUtils } from '../../../common/utils/faker.utils';
 import { UpdateBookRequestDTO } from '../dtos/request/update.book.dto';
+import { GetBookRequestDTO } from '../dtos/request/get.book.dto';
 
 const book = new BookModelBuilder()
   .withId()
@@ -40,12 +41,20 @@ createBookDTO.name = book.name;
 createBookDTO.author = book.author;
 createBookDTO.isbn = book.isbn;
 
-const emptyResultGetAll = {
+const emptyResultGetByFilters = {
   count: 0,
   limit: 20,
   page: 1,
   totalPages: 1,
   data: [],
+};
+
+const resultGetByFilters = {
+  count: 0,
+  limit: 20,
+  page: 1,
+  totalPages: 1,
+  data: [book, book2],
 };
 
 describe('Suite tests Book', () => {
@@ -62,10 +71,12 @@ describe('Suite tests Book', () => {
         {
           provide: getCustomRepositoryToken(BookRepository),
           useValue: {
-            create: jest.fn(),
+            store: jest.fn(),
             getById: jest.fn(),
-            getAll: jest.fn(),
+            getByFilters: jest.fn(),
             deleteById: jest.fn(),
+            enableById: jest.fn(),
+            disableById: jest.fn(),
             updateById: jest.fn(),
           },
         },
@@ -128,54 +139,70 @@ describe('Suite tests Book', () => {
         .post('/books')
         .send(createBookDTO)
         .set('userid', book.userId)
-        .set('usertenantid', book.tenantId)
+        .set('tenantid', book.tenantId)
         .expect(HttpStatus.CREATED);
 
       expect(servicepy).toBeCalled();
     });
   });
-  describe('GET /books/get-by-id/{id}', () => {
-    it('should return Book not found', async () => {
-      await expect(async () => {
-        const servicepy = jest.spyOn(bookService, 'getById');
-        bookRepository.getById = jest
-          .fn()
-          .mockResolvedValue(new Promise((resolve) => resolve(undefined)));
-        await bookController.get(book.tenantId, book.id);
-        expect(servicepy).toBeCalled();
-      }).rejects.toThrow('Book not found');
-    });
-
+  describe('GET /books/{id}', () => {
     it('should return a Book', async () => {
       jest
         .spyOn(bookRepository, 'getById')
         .mockResolvedValue(new Promise((resolve) => resolve(book)));
       const result = await request(app.getHttpServer())
-        .get(`/books/get-by-id/${FakerUtils.faker().random.uuid()}`)
+        .get(`/books/${FakerUtils.faker().random.uuid()}`)
         .set('userid', book.userId)
-        .set('usertenantid', book.tenantId)
+        .set('tenantid', book.tenantId)
         .expect(HttpStatus.OK);
 
-      expect(result.body).toEqual(new BookResponseDTO(book));
+      expect(result.body).not.toBeUndefined();
+    });
+
+    it('should return Book not found', async () => {
+      const filters = new GetBookRequestDTO();
+      await expect(async () => {
+        const servicepy = jest.spyOn(bookService, 'getById');
+        bookRepository.getById = jest
+          .fn()
+          .mockResolvedValue(new Promise((resolve) => resolve(undefined)));
+        await bookController.get(book.tenantId, book.id, filters);
+        expect(servicepy).toBeCalled();
+      }).rejects.toThrow('Book not found');
     });
   });
-  describe('GET /books/get-all', () => {
-    it('should not book not found', async () => {
+  describe('GET /books', () => {
+    it('should return many book', async () => {
       jest
-        .spyOn(bookRepository, 'getAll')
+        .spyOn(bookRepository, 'getByFilters')
         .mockResolvedValue(
-          new Promise((resolve) => resolve(<any>emptyResultGetAll)),
+          new Promise((resolve) => resolve(<any>resultGetByFilters)),
         );
       const result = await request(app.getHttpServer())
-        .get('/books/get-all')
+        .get('/books')
         .set('userid', book.userId)
-        .set('usertenantid', book.tenantId)
+        .set('tenantid', book.tenantId)
         .expect(HttpStatus.OK);
 
-      expect(result.body).toEqual(emptyResultGetAll);
+      expect(result.body.data.length).toEqual(2);
+    });
+
+    it('should not book not found', async () => {
+      jest
+        .spyOn(bookRepository, 'getByFilters')
+        .mockResolvedValue(
+          new Promise((resolve) => resolve(<any>emptyResultGetByFilters)),
+        );
+      const result = await request(app.getHttpServer())
+        .get('/books')
+        .set('userid', book.userId)
+        .set('tenantid', book.tenantId)
+        .expect(HttpStatus.OK);
+
+      expect(result.body).toEqual(emptyResultGetByFilters);
     });
   });
-  describe('PUT /books', () => {
+  describe('PUT /books/{id}', () => {
     it('should updated a book', async () => {
       const updateBookDTO = new UpdateBookRequestDTO();
       updateBookDTO.name = book.name;
@@ -190,11 +217,11 @@ describe('Suite tests Book', () => {
       const result = await request(app.getHttpServer())
         .put(`/books/${book.id}`)
         .set('userid', book.userId)
-        .set('usertenantid', book.tenantId)
+        .set('tenantid', book.tenantId)
         .send(updateBookDTO)
         .expect(HttpStatus.OK);
       expect(servicepy).toBeCalled();
-      expect(result.body).toEqual(new BookResponseDTO(book));
+      expect(result.body).not.toBeUndefined();
     });
     it('should book not found', async () => {
       const updateBookDTO = new UpdateBookRequestDTO();
@@ -216,25 +243,75 @@ describe('Suite tests Book', () => {
       }).rejects.toThrow('Book not found');
     });
   });
-  describe('Delete /books', () => {
+  describe('DELETE /books', () => {
     it('should deleted a book', async () => {
       const servicepy = jest.spyOn(bookService, 'deleteById');
 
       jest
         .spyOn(bookRepository, 'deleteById')
         .mockResolvedValue(new Promise((resolve) => resolve(true)));
-      const result = await request(app.getHttpServer())
+      await request(app.getHttpServer())
         .delete(`/books/${book.id}`)
         .set('userid', book.userId)
-        .set('usertenantid', book.tenantId)
+        .set('tenantid', book.tenantId)
         .expect(HttpStatus.OK);
       expect(servicepy).toBeCalled();
-      expect(result.body).toEqual({});
     });
     it('should return Book not found', async () => {
       await expect(async () => {
         const servicepy = jest.spyOn(bookRepository, 'deleteById');
         bookRepository.deleteById = jest
+          .fn()
+          .mockResolvedValue(new Promise((resolve) => resolve(false)));
+        await bookController.delete(book.tenantId, book.id);
+        expect(servicepy).toBeCalled();
+      }).rejects.toThrow('Book not found');
+    });
+  });
+
+  describe('PUT /books/{id}/enable', () => {
+    it('should enable a book', async () => {
+      const servicepy = jest.spyOn(bookService, 'enableById');
+
+      jest
+        .spyOn(bookRepository, 'enableById')
+        .mockResolvedValue(new Promise((resolve) => resolve(true)));
+      await request(app.getHttpServer())
+        .put(`/books/${book.id}/enable`)
+        .set('userid', book.userId)
+        .set('tenantid', book.tenantId)
+        .expect(HttpStatus.OK);
+      expect(servicepy).toBeCalled();
+    });
+    it('should return Book not found', async () => {
+      await expect(async () => {
+        const servicepy = jest.spyOn(bookRepository, 'enableById');
+        bookRepository.enableById = jest
+          .fn()
+          .mockResolvedValue(new Promise((resolve) => resolve(false)));
+        await bookController.delete(book.tenantId, book.id);
+        expect(servicepy).toBeCalled();
+      }).rejects.toThrow('Book not found');
+    });
+  });
+  describe('PUT /books/{id}/disable', () => {
+    it('should disable a book', async () => {
+      const servicepy = jest.spyOn(bookService, 'disableById');
+
+      jest
+        .spyOn(bookRepository, 'disableById')
+        .mockResolvedValue(new Promise((resolve) => resolve(true)));
+      await request(app.getHttpServer())
+        .put(`/books/${book.id}/disable`)
+        .set('userid', book.userId)
+        .set('tenantid', book.tenantId)
+        .expect(HttpStatus.OK);
+      expect(servicepy).toBeCalled();
+    });
+    it('should return Book not found', async () => {
+      await expect(async () => {
+        const servicepy = jest.spyOn(bookRepository, 'disableById');
+        bookRepository.enableById = jest
           .fn()
           .mockResolvedValue(new Promise((resolve) => resolve(false)));
         await bookController.delete(book.tenantId, book.id);
