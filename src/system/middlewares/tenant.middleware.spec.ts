@@ -57,6 +57,20 @@ describe('Suite tests for TenantMiddleware', () => {
       .expect(HttpStatus.UNAUTHORIZED);
   });
 
+  it('must be OK for requests with tenant_id snake_case', async () => {
+    await request(app.getHttpServer())
+      .get('/test')
+      .set('tenant_id', '0f14d0ab-9605-4a62-a9e4-5ed26688389b')
+      .expect(HttpStatus.OK);
+  });
+
+  it('must be UNAUTHORIZED for requests with tenant_id snake_case invalid', async () => {
+    await request(app.getHttpServer())
+      .get('/test')
+      .set('tenant_id', '0f14b-965-4a2-a94-5e389b')
+      .expect(HttpStatus.UNAUTHORIZED);
+  });
+
   it('must be UNAUTHORIZED for requests without tenantid', async () => {
     await request(app.getHttpServer())
       .get('/test')

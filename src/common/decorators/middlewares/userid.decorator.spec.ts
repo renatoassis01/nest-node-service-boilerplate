@@ -34,6 +34,15 @@ describe('Suite tests for @UserId() decorator', () => {
     expect(response.text).toEqual(userId);
   });
 
+  it('must be return user_id snake_case', async () => {
+    const userId = FakerUtils.faker().random.uuid();
+    const response = await request(app.getHttpServer())
+      .get('/test')
+      .set('user_id', userId);
+
+    expect(response.text).toEqual(userId);
+  });
+
   afterEach(async () => {
     await app.close();
   });

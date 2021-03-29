@@ -57,6 +57,20 @@ describe('Suite tests for UserRequestMiddleware', () => {
       .expect(HttpStatus.UNAUTHORIZED);
   });
 
+  it('must be OK for requests with user_id snake_case', async () => {
+    await request(app.getHttpServer())
+      .get('/test')
+      .set('user_id', '0f14d0ab-9605-4a62-a9e4-5ed26688389b')
+      .expect(HttpStatus.OK);
+  });
+
+  it('must be UNAUTHORIZED for requests with user_Id snake_case invalid', async () => {
+    await request(app.getHttpServer())
+      .get('/test')
+      .set('user_id', '0f14b-965-4a2-a94-5e389b')
+      .expect(HttpStatus.UNAUTHORIZED);
+  });
+
   it('must be UNAUTHORIZED for requests without userId', async () => {
     await request(app.getHttpServer())
       .get('/test')
