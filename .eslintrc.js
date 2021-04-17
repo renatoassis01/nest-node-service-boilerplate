@@ -9,14 +9,14 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
-    './.eslint-ts-naming-convention-seidor.js',
+    './.eslint-ts-naming-convention.js',
   ],
   root: true,
   env: {
     node: true,
     jest: true,
   },
-  ignorePatterns: ['.eslintrc.js', '.eslint-ts-naming-convention-seidor.js'],
+  ignorePatterns: ['.eslintrc.js', '.eslint-ts-naming-convention.js'],
   rules: {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
