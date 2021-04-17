@@ -32,9 +32,9 @@ module.exports = {
       },
     },
     {
-      ignorePatterns: ['**/migrations/*'],
+      files: ['**/migrations/*.ts'],
       rules: {
-        '@typescript-eslint/naming-convention': 'on',
+        '@typescript-eslint/naming-convention': 'off',
       },
     },
   ],
