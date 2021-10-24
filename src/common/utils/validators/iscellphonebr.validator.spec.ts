@@ -2,12 +2,12 @@ import { Validator } from 'class-validator';
 import { IsCellPhoneBR } from './iscellphonebr.validator';
 const validator = new Validator();
 
-describe('Suite teste class validator @IsCellPhoneBR()', () => {
-  class MyDTO {
-    @IsCellPhoneBR()
-    cellphone: string;
-  }
+class MyDTO {
+  @IsCellPhoneBR()
+  cellphone: string;
+}
 
+describe('Suite teste class validator @IsCellPhoneBR()', () => {
   it('Should NOT return an error. Valid phone CASE 1', () => {
     const model = new MyDTO();
     model.cellphone = '77195761716';
@@ -71,6 +71,9 @@ describe('Suite teste class validator @IsCellPhoneBR()', () => {
       expect(errors.length).toEqual(0);
     });
   });
+});
+
+describe('Suite teste class validator @IsCellPhoneBR() with ERROR', () => {
   it('Should return an error. invalid phone CASE 1', () => {
     const model = new MyDTO();
     model.cellphone = '19576-171';
