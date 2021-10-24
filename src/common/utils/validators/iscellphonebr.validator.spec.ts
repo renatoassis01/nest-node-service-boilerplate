@@ -139,6 +139,13 @@ describe('Suite teste class validator @IsCellPhoneBR() without DD', () => {
       expect(errors.length).toEqual(0);
     });
   });
+});
+
+describe('Suite teste class validator @IsCellPhoneBR() without DD case ERROR', () => {
+  class MyDTO {
+    @IsCellPhoneBR({ isWithoutDD: true })
+    cellphone: string;
+  }
 
   it('Should return an error. invalid phone CASE 1', () => {
     const model = new MyDTO();
@@ -217,6 +224,14 @@ describe('Suite teste class validator @IsCellPhoneBR() with each', () => {
       expect(errors.length).toEqual(0);
     });
   });
+});
+
+describe('Suite teste class validator @IsCellPhoneBR() with each CASE ERROR', () => {
+  class MyDTO {
+    @IsCellPhoneBR({ each: true })
+    cellphone: string[];
+  }
+
   it('Should return an error. invalid phone CASE 1', () => {
     const model = new MyDTO();
     model.cellphone = ['(77)19576-1716', '(77)19576171661'];
