@@ -12,7 +12,7 @@ describe('Suite teste class validator IsOptionalWhen()', () => {
     @IsOptional()
     age?: number;
 
-    @IsNotEmpty()
+    @IsOptional()
     legalPerson: boolean;
 
     @IsOptionalWhen<PersonRequestDTO>('legalPerson', false)
@@ -38,7 +38,17 @@ describe('Suite teste class validator IsOptionalWhen()', () => {
     expect(errors.length).toEqual(0);
   });
 
-  it('Should NOT return an error because the property is REQUIRED, but has been FULFILLED for this CASE 3', async () => {
+  it('Should NOT return an error because the property is optional, but has been FULFILLED for this CASE 3', async () => {
+    const model = new PersonRequestDTO();
+    model.name = 'Machando de Assis';
+    model.documentNumber = '44.975.402/0001-87';
+    model.age = 69;
+
+    const errors = await validator.validate(model);
+    expect(errors.length).toEqual(0);
+  });
+
+  it('Should NOT return an error because the property is REQUIRED, but has been FULFILLED for this CASE 4', async () => {
     const model = new PersonRequestDTO();
     model.legalPerson = true;
     model.name = 'Machando de Assis';
@@ -49,7 +59,7 @@ describe('Suite teste class validator IsOptionalWhen()', () => {
     expect(errors.length).toEqual(0);
   });
 
-  it('SHOULD return an error because the property is REQUIRED but has NOT been FULFILLED for this CASE 4', async () => {
+  it('SHOULD return an error because the property is REQUIRED but has NOT been FULFILLED for this CASE 5', async () => {
     const model = new PersonRequestDTO();
     model.legalPerson = true;
     model.name = 'Machando de Assis';
