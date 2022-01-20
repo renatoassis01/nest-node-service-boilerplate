@@ -83,6 +83,8 @@ export class BookController {
     @UserId() userId: string,
     @Body() storeBookDTO: StoreBookRequestDTO,
   ): Promise<BookResponseDTO> {
+    console.log('typeof', typeof storeBookDTO.teste);
+    console.log(storeBookDTO);
     const book = await this.bookService.store(tenantId, userId, storeBookDTO);
     return new BookResponseDTO(book);
   }

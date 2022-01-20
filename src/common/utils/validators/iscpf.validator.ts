@@ -6,7 +6,7 @@ import * as cpf from '@fnando/cpf';
  * @param validationOptions
  */
 export function IsCPF(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: any, propertyName: string) {
     registerDecorator({
       name: 'isCPF',
       target: object.constructor,

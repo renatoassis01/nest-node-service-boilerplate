@@ -1,5 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
+import {
+  TransformToDateOffset,
+  TransformToDateWithTZ,
+} from '../../../../common/utils/transformers/date';
 export class StoreBookRequestDTO {
   @ApiProperty({
     description: 'The name of book',
@@ -19,4 +23,7 @@ export class StoreBookRequestDTO {
   })
   @IsOptional()
   author?: string;
+
+  @TransformToDateOffset(1, 'M')
+  data: string;
 }
